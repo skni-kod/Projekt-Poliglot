@@ -15,7 +15,10 @@ MainWindow::MainWindow(QWidget *parent)
     for (const auto &row : s){
         QString temp;
         for (QChar sign : row){
-            temp += sign;
+            if(sign != '#'){
+                temp += sign;
+            }
+            else temp += " ";
             temp += " ";
         }
         ui->textBrowser->append(temp);
