@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     /// TYMCZASOWE WYSWIETLANIE PLANSZY
     Scheme s = board.Scheme();
-    for (auto row : s){
+    for (const auto &row : s){
         QString temp;
         for (QChar sign : row){
             temp += sign;
