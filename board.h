@@ -14,7 +14,24 @@ private:
     static int maxSize;
     int minX = maxSize, maxX = 0, minY = maxSize, maxY = 0; //będą użyte do przycięcia schematu o nieużywane pola
     //std::vector<QString> words = {"pobić", "opić", "bić", "obić", "poić", "pić"}, constWords;
-    std::vector<QString> words = {"kwit", "kotwica", "kwiat", "taki", "wacik", "koci", "kita", "kwita", "ciotka", "kwota", "owak", "owca"}, constWords;
+    //std::vector<QString> words = {"kwit", "kotwica", "kwiat", "taki", "wacik", "koci", "kita", "kwita", "ciotka", "kwota", "owak", "owca"}, constWords;
+    std::vector<QString> words = {"port",
+                                  "trop",
+                                  "urok",
+                                  "tor",
+                                  "koc",
+                                  "trup",
+                                  "urlop",
+                                  "pomruk",
+                                  "por",
+                                  "prom",
+                                  "luk",
+                                  "kult",
+                                  "tok",
+                                  "kur",
+                                  "okup",
+                                  "rum",
+                                  "kocur"}, constWords;
     std::unordered_map<QChar, std::vector<std::pair<int, int>>> signMap;
     std::vector<QChar> letters;
     std::vector<std::pair<int, int>> allCoords, tips;

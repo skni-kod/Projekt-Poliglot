@@ -58,16 +58,13 @@ Board::Board(QObject *parent)
     int x = maxSize/2 - lWord.length()/2;
 
     tips.push_back({x-1, y}); //wstaw kratkę przed właściwym słowem
+    minX = x;
     for (int i = 0; i < lWord.length(); i++){
         scheme[y][x] = lWord.at(i);
         addCoord(lWord.at(i), x, y);
         x++;
-
-        if(minX > x) minX = x;
-        if(minY > y) minY = y;
-        if(maxX < x) maxX = x;
-        if(maxY < y) maxY = y;
     }
+    maxX = x;
     tips.push_back({x, y}); //wstaw kratkę po właściwym słowie
 
     for(auto& word : words){
@@ -86,6 +83,12 @@ Board::Board(QObject *parent)
         int crossLetterIndex = rand() % (int)lWord.length();
         QChar crossLetter = lWord.at(crossLetterIndex);
         qDebug() << "Chosen crossLetter:  " << crossLetter;
+
+        if(signMap[crossLetter].size() == 0){
+            words.push_back(lWord);
+            continue;
+        }
+
 
         int index = rand() % signMap[crossLetter].size();
         int x = signMap[crossLetter].at(index).first;
@@ -132,15 +135,14 @@ Board::Board(QObject *parent)
                     if(vertical)
                         vertical = false;
                     else vertical = true;
-
                     continue;
                 }
                 else{
                     //poddaj się i wywal słowo
                     qDebug() << "throwing away word: " << lWord;
+                    unsuccessfulTries = 0;
                     continue;
                 }
-
             }
 
             unsuccessfulTries = 0;
@@ -152,10 +154,8 @@ Board::Board(QObject *parent)
                 scheme[yy][x] = first.at(first.length() - 1 - (i-1));
 
                 addCoord(first.at(first.length() - 1 - (i-1)), x, yy);
-                //if(minX > x) minX = x;
+
                 if(minY > yy) minY = yy;
-                //if(maxX < x) maxX = x;
-                //if(maxY < yy) maxY = yy;
 
                 if(i == first.length()) //w ostatniej iteracji dodaj czubek
                     tips.push_back({x, yy-1});
@@ -232,7 +232,7 @@ Board::Board(QObject *parent)
                 qDebug() << "Now inserting letter: " << second.at(i-1) << " from word: " << lWord;
                 scheme[y][xx] = second.at(i-1);
                 addCoord(second.at(i-1), xx, y);
-                if(maxX < x) maxX = x;
+                if(maxX < xx) maxX = xx;
                 if(i == second.length())
                     tips.push_back({xx+1, y});
             }
@@ -242,6 +242,10 @@ Board::Board(QObject *parent)
             vertical = false;
         else vertical = true;
     }
+    qDebug() << "min X: " << minX
+        << "max X: " << maxX
+           << "min Y: " << minY
+             << "max Y: " << maxY;
 }
 
 Scheme Board::Scheme() const
