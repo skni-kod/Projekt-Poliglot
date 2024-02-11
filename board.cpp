@@ -1,25 +1,20 @@
 #include "board.h"
 #include "qdebug.h"
 #include <random>
+#include <algorithm>
 
 int Board::maxSize = 20;
 
 // zwraca najdłuższe słowo i usuwa je
 QString Board::longestWord()
 {
-
-    int longestLength = 0, longestIndex = 0, i = 0;
-    for (auto& word : words){
-        if(longestLength < word.length()){
-            longestLength = word.length();
-            longestIndex = i;
-        }
-        i++;
-    }
-    QString toReturn = words[longestIndex];
-    auto it = std::next(words.begin(), longestIndex);
-    words.erase(it);
+    QString toReturn = words.back();
+    words.pop_back();
     return toReturn;
+}
+
+bool Board::compareLength(const QString& str1, const QString& str2){
+    return str1.length() < str2.length();
 }
 
 void Board::addCoord(QChar letter, int x, int y){
@@ -34,13 +29,15 @@ bool Board::checkNeighbours(int x, int y, int safeX, int safeY){
         (scheme[y-1][x] == '#' || (y-1 == safeY && x == safeX)) &&
         (scheme[y][x+1] == '#' || (y == safeY && x+1 == safeX)) &&
         (scheme[y][x-1] == '#' || (y == safeY && x-1 == safeX)) &&
-        x+1 < maxSize && x > 0 && y+1 < maxSize && y > 0) return true;
+        x+1 < maxSize && x > 0 && y+1 < maxSize && y > 0 &&
+        std::find(tips.begin(), tips.end(), (std::pair<int,int>){x,y}) == tips.end()) return true;
     else return false;
 }
 
 Board::Board(QObject *parent)
     : QObject{parent}
 {
+    std::sort(words.begin(), words.end(), compareLength);
     constWords = words;
 
     for (int i = 0; i < maxSize; i++){
@@ -56,10 +53,11 @@ Board::Board(QObject *parent)
     //wyznacz najdłuższy element
     QString lWord = longestWord();
 
+    //wstaw go zaczynając w y,x
     int y = maxSize/2 ;
     int x = maxSize/2 - lWord.length()/2;
 
-
+    tips.push_back({x-1, y}); //wstaw kratkę przed właściwym słowem
     for (int i = 0; i < lWord.length(); i++){
         scheme[y][x] = lWord.at(i);
         addCoord(lWord.at(i), x, y);
@@ -70,6 +68,7 @@ Board::Board(QObject *parent)
         if(maxX < x) maxX = x;
         if(maxY < y) maxY = y;
     }
+    tips.push_back({x, y}); //wstaw kratkę po właściwym słowie
 
     for(auto& word : words){
         qDebug() << word;
@@ -81,20 +80,24 @@ Board::Board(QObject *parent)
 
     while(words.size() > 0){
 
-
         QString lWord = longestWord();
         qDebug() << "now trying word: " << lWord;
+
         int crossLetterIndex = rand() % (int)lWord.length();
         QChar crossLetter = lWord.at(crossLetterIndex);
         qDebug() << "Chosen crossLetter:  " << crossLetter;
+
         int index = rand() % signMap[crossLetter].size();
         int x = signMap[crossLetter].at(index).first;
         int y = signMap[crossLetter].at(index).second;
+
         //
         //first - to co przed skrzyzowaniem, second - to co po
         //
+
         QString first = lWord.sliced(0, crossLetterIndex);
         QString second = lWord.sliced(crossLetterIndex+1);
+
         if(vertical){
             bool ok = true;
 
@@ -134,10 +137,13 @@ Board::Board(QObject *parent)
                 }
                 else{
                     //poddaj się i wywal słowo
+                    qDebug() << "throwing away word: " << lWord;
                     continue;
                 }
 
             }
+
+            unsuccessfulTries = 0;
 
             for(int i = 1; i <= first.length(); i++){
 
@@ -150,6 +156,9 @@ Board::Board(QObject *parent)
                 if(minY > yy) minY = yy;
                 //if(maxX < x) maxX = x;
                 //if(maxY < yy) maxY = yy;
+
+                if(i == first.length()) //w ostatniej iteracji dodaj czubek
+                    tips.push_back({x, yy-1});
             }
             for(int i = 1; i <= second.length(); i++){
 
@@ -159,6 +168,8 @@ Board::Board(QObject *parent)
 
                 addCoord(second.at(i-1), x, yy);
                 if(maxY < yy) maxY = yy;
+                if(i == second.length())
+                    tips.push_back({x, yy+1});
             }
         }
 
@@ -199,11 +210,12 @@ Board::Board(QObject *parent)
                 else{
                     unsuccessfulTries = 0;
                     //poddaj się i wywal słowo
+                    qDebug() << "throwing away word: " << lWord;
                     continue;
                 }
             }
 
-
+            unsuccessfulTries = 0;
             for(int i = 1; i <= first.length(); i++){
 
                 int xx = x - i;
@@ -211,6 +223,8 @@ Board::Board(QObject *parent)
                 scheme[y][xx] = first.at(first.length() - 1 - (i-1));
                 addCoord(first.at(first.length() - 1 - (i-1)), xx, y);
                 if(minX > xx) minX = xx;
+                if(i == first.length())
+                    tips.push_back({xx-1, y});
             }
             for(int i = 1; i <= second.length(); i++){
 
@@ -219,6 +233,8 @@ Board::Board(QObject *parent)
                 scheme[y][xx] = second.at(i-1);
                 addCoord(second.at(i-1), xx, y);
                 if(maxX < x) maxX = x;
+                if(i == second.length())
+                    tips.push_back({xx+1, y});
             }
         }
 
