@@ -11,11 +11,13 @@ CONFIG += c++17
 SOURCES += \
     board.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    word_gen.cpp
 
 HEADERS += \
     board.h \
-    mainwindow.h
+    mainwindow.h \
+    word_gen.h
 
 FORMS += \
     mainwindow.ui
