@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QChar>
-
+#include "word_gen.h"
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -25,6 +25,8 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     ///////////////
+    word_gen Word;
+    Word.showResult();
 }
 
 MainWindow::~MainWindow()
