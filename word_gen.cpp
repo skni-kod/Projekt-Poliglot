@@ -9,8 +9,12 @@ void word_gen::showResult()
 {
     draw_letters();
     showLetters();
-    QString filePath = QDir::currentPath() + "/baza_slow/popularne.txt";
-    get_Word_File(filePath);
+    QString filePath1 = QDir::currentPath();
+    //QString filePath2 = filePath1.mid(32,40);
+    QString filePath2 = filePath1.mid(0,32);
+    filePath2 = filePath2 + "Projekt-Poliglot/baza_slow/popularne.txt";
+    qDebug() <<filePath2;
+    get_Word_File(filePath2);
 }
 
 void word_gen::showLetters()
