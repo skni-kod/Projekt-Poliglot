@@ -20,6 +20,5 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    Board board;
 };
 #endif // MAINWINDOW_H

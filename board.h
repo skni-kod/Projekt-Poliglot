@@ -41,7 +41,7 @@ private:
     bool checkNeighbours(int x, int y, int safeX, int safeY);
     static bool compareLength(const QString &str1, const QString &str2);
 public:
-    explicit Board(QObject *parent = nullptr);
+    explicit Board(QObject *parent = nullptr, std::vector<QString> wordsList = {});
     Scheme Scheme() const;
 
 signals:

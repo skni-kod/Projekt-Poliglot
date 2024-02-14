@@ -8,7 +8,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
 
     ui->setupUi(this);
+    word_gen word;
+    word.showResult();
 
+    Board board(nullptr, word.getWords());
 
     /// TYMCZASOWE WYSWIETLANIE PLANSZY
     Scheme s = board.Scheme();
@@ -25,8 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     ///////////////
-    word_gen Word;
-    Word.showResult();
+
 }
 
 MainWindow::~MainWindow()
