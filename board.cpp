@@ -24,19 +24,20 @@ void Board::addCoord(QChar letter, int x, int y){
 
 //sprawdzi czy nie skoliduje z innym slowem albo czy nie wyjdzie poza obszar
 bool Board::checkNeighbours(int x, int y, int safeX, int safeY){
-    if (scheme[y][x] == '#' &&
+    if (x+1 < maxSize-1 && x > 0 && y+1 < maxSize-1 && y > 0 &&
+        scheme[y][x] == '#' &&
         (scheme[y+1][x] == '#' || (y+1 == safeY && x == safeX)) &&
         (scheme[y-1][x] == '#' || (y-1 == safeY && x == safeX)) &&
         (scheme[y][x+1] == '#' || (y == safeY && x+1 == safeX)) &&
         (scheme[y][x-1] == '#' || (y == safeY && x-1 == safeX)) &&
-        x+1 < maxSize && x > 0 && y+1 < maxSize && y > 0 &&
         std::find(tips.begin(), tips.end(), (std::pair<int,int>){x,y}) == tips.end()) return true;
     else return false;
 }
 
-Board::Board(QObject *parent)
+Board::Board(QObject *parent, std::vector<QString> wordsList)
     : QObject{parent}
 {
+    words = wordsList;
     std::sort(words.begin(), words.end(), compareLength);
     constWords = words;
 
@@ -52,6 +53,7 @@ Board::Board(QObject *parent)
 
     //wyznacz najdłuższy element
     QString lWord = longestWord();
+    qDebug() << "First word: " << lWord;
 
     //wstaw go zaczynając w y,x
     int y = maxSize/2 ;
@@ -145,6 +147,8 @@ Board::Board(QObject *parent)
                 }
             }
 
+            tips.push_back({x,y});
+
             unsuccessfulTries = 0;
 
             for(int i = 1; i <= first.length(); i++){
@@ -215,6 +219,7 @@ Board::Board(QObject *parent)
                 }
             }
 
+            tips.push_back({x,y});
             unsuccessfulTries = 0;
             for(int i = 1; i <= first.length(); i++){
 

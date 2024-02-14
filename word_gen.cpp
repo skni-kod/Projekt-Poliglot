@@ -10,11 +10,19 @@ void word_gen::showResult()
     draw_letters();
     showLetters();
     QString filePath1 = QDir::currentPath();
-    //QString filePath2 = filePath1.mid(32,40);
-    QString filePath2 = filePath1.mid(0,32);
-    filePath2 = filePath2 + "Projekt-Poliglot/baza_slow/popularne.txt";
-    qDebug() <<filePath2;
-    get_Word_File(filePath2);
+
+    std::reverse(filePath1.begin(), filePath1.end());
+    int indToRem = filePath1.indexOf("/");
+    filePath1 = filePath1.sliced(indToRem);
+    std::reverse(filePath1.begin(), filePath1.end());
+    filePath1 += "Projekt-Poliglot/baza_slow/popularne.txt";
+    qDebug() <<filePath1;
+    get_Word_File(filePath1);
+}
+
+std::vector<QString>& word_gen::getWords()
+{
+    return wordsDrawn;
 }
 
 void word_gen::showLetters()
@@ -50,8 +58,11 @@ void word_gen::get_Word_File(const QString& fileName)
 
     while (!in.atEnd()) {
         QString word = in.readLine();
-        if (word.length() <= nr_letters && word_Letters(word))
+        if (word.length() <= nr_letters && word_Letters(word)){
             qDebug() << word;
+            wordsDrawn.push_back(word);
+        }
+
     }
     plik.close();
 }

@@ -10,6 +10,7 @@ public:
     void showResult();
     int nr_letters = 0;
     QVector<QChar> get_Letters;
+    std::vector<QString>& getWords();
 private:
     QVector<QChar> pol_letters;
     QRandomGenerator generator;
@@ -17,6 +18,7 @@ private:
     void draw_letters();
     void get_Word_File(const QString& fileName);
     bool word_Letters(const QString& word);
+    std::vector<QString> wordsDrawn;
 };
 
 #endif // WORD_GEN_H
