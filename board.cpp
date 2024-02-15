@@ -5,6 +5,8 @@
 
 int Board::maxSize = 20;
 
+int Board::maxTries = 150;
+
 // zwraca najdłuższe słowo i usuwa je
 QString Board::longestWord()
 {
@@ -37,9 +39,11 @@ bool Board::checkNeighbours(int x, int y, int safeX, int safeY){
 Board::Board(QObject *parent, std::vector<QString> wordsList)
     : QObject{parent}
 {
+
+    if(wordsList.size() < 3)
+        return;
     words = wordsList;
     std::sort(words.begin(), words.end(), compareLength);
-    constWords = words;
 
     for (int i = 0; i < maxSize; i++){
         std::vector<QChar> row;
@@ -68,6 +72,7 @@ Board::Board(QObject *parent, std::vector<QString> wordsList)
     }
     maxX = x;
     tips.push_back({x, y}); //wstaw kratkę po właściwym słowie
+    usedWordsCount++;
 
     for(auto& word : words){
         qDebug() << word;
@@ -78,6 +83,11 @@ Board::Board(QObject *parent, std::vector<QString> wordsList)
     int unsuccessfulTries = 0;
 
     while(words.size() > 0){
+        if(unsuccessfulTries >= maxTries){
+            longestWord();
+            unsuccessfulTries = 0;
+            continue;
+        }
 
         QString lWord = longestWord();
         qDebug() << "now trying word: " << lWord;
@@ -129,7 +139,7 @@ Board::Board(QObject *parent, std::vector<QString> wordsList)
             //jak nie można dać słowa bo koliduje to wróć słowo do words
             if(!ok) {
 
-                if(unsuccessfulTries < 200){
+                if(unsuccessfulTries < maxTries){
                     words.push_back(lWord);
                     //jak się nie udało to spróbuj inną orientacją
                     unsuccessfulTries++;
@@ -148,6 +158,7 @@ Board::Board(QObject *parent, std::vector<QString> wordsList)
             }
 
             tips.push_back({x,y});
+            usedWordsCount++;
 
             unsuccessfulTries = 0;
 
@@ -175,6 +186,7 @@ Board::Board(QObject *parent, std::vector<QString> wordsList)
                 if(i == second.length())
                     tips.push_back({x, yy+1});
             }
+            signMap[crossLetter].erase(signMap[crossLetter].begin() + index);
         }
 
         //    GDY POZIOMO
@@ -200,7 +212,7 @@ Board::Board(QObject *parent, std::vector<QString> wordsList)
             }
 
             if(!ok) {
-                if(unsuccessfulTries < 200){
+                if(unsuccessfulTries < maxTries){
                     words.push_back(lWord);
                     //jak się nie udało to spróbuj inną orientacją
                     unsuccessfulTries++;
@@ -219,6 +231,7 @@ Board::Board(QObject *parent, std::vector<QString> wordsList)
                 }
             }
 
+            usedWordsCount++;
             tips.push_back({x,y});
             unsuccessfulTries = 0;
             for(int i = 1; i <= first.length(); i++){
@@ -241,12 +254,15 @@ Board::Board(QObject *parent, std::vector<QString> wordsList)
                 if(i == second.length())
                     tips.push_back({xx+1, y});
             }
+            signMap[crossLetter].erase(signMap[crossLetter].begin() + index);
         }
 
         if(vertical)
             vertical = false;
         else vertical = true;
     }
+
+
     qDebug() << "min X: " << minX
         << "max X: " << maxX
            << "min Y: " << minY
@@ -256,5 +272,27 @@ Board::Board(QObject *parent, std::vector<QString> wordsList)
 Scheme Board::Scheme() const
 {
     return scheme;
+}
+
+int Board::UsedWordsCount() const
+{
+    return usedWordsCount;
+}
+
+void Board::operator=(const Board &obj)
+{
+    if(this != &obj){
+        minX = obj.minX;
+        maxX = obj.maxX;
+        minY = obj.minY;
+        maxY = obj.maxY;
+        usedWordsCount = obj.usedWordsCount;
+        words = obj.words;
+        signMap = obj.signMap;
+        letters = obj.letters;
+        allCoords = obj.allCoords;
+        tips = obj.tips;
+        scheme = obj.scheme;
+    }
 }
 

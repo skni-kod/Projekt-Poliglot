@@ -10,8 +10,16 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     word_gen word;
     word.showResult();
-
     Board board(nullptr, word.getWords());
+    int count = board.UsedWordsCount();
+
+    while(count < 4){
+        word_gen word;
+        word.showResult();
+        board = Board(nullptr, word.getWords());
+        count = board.UsedWordsCount();
+    }
+
 
     /// TYMCZASOWE WYSWIETLANIE PLANSZY
     Scheme s = board.Scheme();

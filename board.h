@@ -12,7 +12,9 @@ class Board : public QObject
     Q_OBJECT
 private:
     static int maxSize;
+    static int maxTries;
     int minX = maxSize, maxX = 0, minY = maxSize, maxY = 0; //będą użyte do przycięcia schematu o nieużywane pola
+    int usedWordsCount = 0;
     //std::vector<QString> words = {"pobić", "opić", "bić", "obić", "poić", "pić"}, constWords;
     //std::vector<QString> words = {"kwit", "kotwica", "kwiat", "taki", "wacik", "koci", "kita", "kwita", "ciotka", "kwota", "owak", "owca"}, constWords;
     std::vector<QString> words = {"port",
@@ -31,7 +33,7 @@ private:
                                   "kur",
                                   "okup",
                                   "rum",
-                                  "kocur"}, constWords;
+                                  "kocur"};
     std::unordered_map<QChar, std::vector<std::pair<int, int>>> signMap;
     std::vector<QChar> letters;
     std::vector<std::pair<int, int>> allCoords, tips;
@@ -43,6 +45,8 @@ private:
 public:
     explicit Board(QObject *parent = nullptr, std::vector<QString> wordsList = {});
     Scheme Scheme() const;
+    int UsedWordsCount() const;
+    void operator=(const Board& obj);
 
 signals:
 };
