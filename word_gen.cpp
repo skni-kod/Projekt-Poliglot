@@ -17,6 +17,7 @@ void word_gen::showResult()
     std::reverse(filePath1.begin(), filePath1.end());
     filePath1 += "Projekt-Poliglot/baza_slow/popularne.txt";
     qDebug() <<filePath1;
+    counter =0;
     get_Word_File(filePath1);
 }
 
@@ -61,10 +62,18 @@ void word_gen::get_Word_File(const QString& fileName)
         if (word.length() <= nr_letters && word_Letters(word)){
             qDebug() << word;
             wordsDrawn.push_back(word);
+            counter++;
         }
 
     }
     plik.close();
+    if(counter<=5){
+        qDebug() << "Not enough words. Draws again...";
+        draw_letters();
+        showLetters();
+        get_Word_File(fileName);
+    }
+
 }
 
 bool word_gen::word_Letters(const QString &word)
