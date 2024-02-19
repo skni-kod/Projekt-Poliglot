@@ -83,11 +83,6 @@ Board::Board(QObject *parent, std::vector<QString> wordsList)
     int unsuccessfulTries = 0;
 
     while(words.size() > 0){
-        if(unsuccessfulTries >= maxTries){
-            longestWord();
-            unsuccessfulTries = 0;
-            continue;
-        }
 
         QString lWord = longestWord();
         qDebug() << "now trying word: " << lWord;
@@ -96,7 +91,14 @@ Board::Board(QObject *parent, std::vector<QString> wordsList)
         QChar crossLetter = lWord.at(crossLetterIndex);
         qDebug() << "Chosen crossLetter:  " << crossLetter;
 
+        if(unsuccessfulTries >= maxTries){
+                qDebug() << "throwing away word: " << lWord;
+                unsuccessfulTries = 0;
+                continue;
+        }
+
         if(signMap[crossLetter].size() == 0){
+            unsuccessfulTries++;
             words.push_back(lWord);
             continue;
         }

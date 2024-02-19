@@ -20,5 +20,6 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    void prepareGrid();
 };
 #endif // MAINWINDOW_H

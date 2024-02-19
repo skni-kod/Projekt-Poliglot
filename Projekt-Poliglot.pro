@@ -10,12 +10,14 @@ CONFIG += c++17
 
 SOURCES += \
     board.cpp \
+    gridcell.cpp \
     main.cpp \
     mainwindow.cpp \
     word_gen.cpp
 
 HEADERS += \
     board.h \
+    gridcell.h \
     mainwindow.h \
     word_gen.h
 
