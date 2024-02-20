@@ -36,9 +36,10 @@ bool Board::checkNeighbours(int x, int y, int safeX, int safeY){
     else return false;
 }
 
-Board::Board(QObject *parent, std::vector<QString> wordsList)
+Board::Board(QObject *parent, std::vector<QString> wordsList, QVector<QChar> letterSet)
     : QObject{parent}
 {
+    letters = letterSet;
 
     if(wordsList.size() < 3)
         return;
@@ -68,9 +69,11 @@ Board::Board(QObject *parent, std::vector<QString> wordsList)
     for (int i = 0; i < lWord.length(); i++){
         scheme[y][x] = lWord.at(i);
         addCoord(lWord.at(i), x, y);
+        maxX = x;
         x++;
     }
-    maxX = x;
+    minY = maxY = y;
+
     tips.push_back({x, y}); //wstaw kratkę po właściwym słowie
     usedWordsCount++;
 
@@ -173,6 +176,7 @@ Board::Board(QObject *parent, std::vector<QString> wordsList)
                 addCoord(first.at(first.length() - 1 - (i-1)), x, yy);
 
                 if(minY > yy) minY = yy;
+                if(maxY < yy) maxY = yy;
 
                 if(i == first.length()) //w ostatniej iteracji dodaj czubek
                     tips.push_back({x, yy-1});
@@ -185,6 +189,7 @@ Board::Board(QObject *parent, std::vector<QString> wordsList)
 
                 addCoord(second.at(i-1), x, yy);
                 if(maxY < yy) maxY = yy;
+                if(minY > yy) minY = yy;
                 if(i == second.length())
                     tips.push_back({x, yy+1});
             }
@@ -243,6 +248,7 @@ Board::Board(QObject *parent, std::vector<QString> wordsList)
                 scheme[y][xx] = first.at(first.length() - 1 - (i-1));
                 addCoord(first.at(first.length() - 1 - (i-1)), xx, y);
                 if(minX > xx) minX = xx;
+                if(maxX < xx) maxX = xx;
                 if(i == first.length())
                     tips.push_back({xx-1, y});
             }
@@ -253,6 +259,7 @@ Board::Board(QObject *parent, std::vector<QString> wordsList)
                 scheme[y][xx] = second.at(i-1);
                 addCoord(second.at(i-1), xx, y);
                 if(maxX < xx) maxX = xx;
+                if(minX > xx) minX = xx;
                 if(i == second.length())
                     tips.push_back({xx+1, y});
             }
@@ -279,6 +286,21 @@ Scheme Board::Scheme() const
 int Board::UsedWordsCount() const
 {
     return usedWordsCount;
+}
+
+int Board::Width() const
+{
+    return maxX - minX + 1;
+}
+
+int Board::Height() const
+{
+    return maxY - minY + 1;
+}
+
+QVector<QChar>& Board::Letters()
+{
+    return letters;
 }
 
 void Board::operator=(const Board &obj)

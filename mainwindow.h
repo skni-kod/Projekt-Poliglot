@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "board.h"
+#include "qpushbutton.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -20,6 +21,9 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    Board board;
+    std::vector<QPushButton*> letButtons;
     void prepareGrid();
+    void prepareLetterButtons();
 };
 #endif // MAINWINDOW_H
