@@ -35,7 +35,7 @@ private:
                                   "rum",
                                   "kocur"};
     std::unordered_map<QChar, std::vector<std::pair<int, int>>> signMap;
-    std::vector<QChar> letters;
+    QVector<QChar> letters;
     std::vector<std::pair<int, int>> allCoords, tips;
     Scheme scheme;
     QString longestWord();
@@ -43,9 +43,12 @@ private:
     bool checkNeighbours(int x, int y, int safeX, int safeY);
     static bool compareLength(const QString &str1, const QString &str2);
 public:
-    explicit Board(QObject *parent = nullptr, std::vector<QString> wordsList = {});
+    explicit Board(QObject *parent = nullptr, std::vector<QString> wordsList = {}, QVector<QChar> letterSet = {});
     Scheme Scheme() const;
     int UsedWordsCount() const;
+    int Width() const;
+    int Height() const;
+    QVector<QChar>& Letters();
     void operator=(const Board& obj);
 
 signals:
