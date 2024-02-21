@@ -11,6 +11,8 @@ public:
     int nr_letters = 0;
     QVector<QChar> get_Letters;
     std::vector<QString>& getWords();
+    int counter = 0;
+
 private:
     QVector<QChar> pol_letters;
     QRandomGenerator generator;
