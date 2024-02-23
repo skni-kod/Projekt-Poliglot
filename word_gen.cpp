@@ -78,6 +78,7 @@ void word_gen::get_Word_File(const QString& fileName)
     plik.close();
     if(counter<=5){
         qDebug() << "Not enough words. Draws again...";
+        wordsDrawn.clear();
         draw_letters();
         showLetters();
         get_Word_File(fileName);

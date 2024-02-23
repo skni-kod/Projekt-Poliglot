@@ -19,6 +19,6 @@ int main(int argc, char *argv[])
     // Ustawienie rozmiaru głównego okna na rozmiar ekranu
 
 
-    w.showMaximized();
+    w.showFullScreen();
     return a.exec();
 }
