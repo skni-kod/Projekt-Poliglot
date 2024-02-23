@@ -21,6 +21,8 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    int width = 1920, height = 1080;
+    QString projectPath;
     Board board;
     std::vector<QPushButton*> letButtons;
     void prepareGrid();
