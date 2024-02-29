@@ -8,6 +8,7 @@
 #include <QGraphicsPixmapItem>
 #include "word_gen.h"
 #include "gridcell.h"
+#include "user.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -31,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
     filePath = filePath.sliced(indToRem);
     std::reverse(filePath.begin(), filePath.end());
     QString kodPath = filePath + "Projekt-Poliglot/sprites/skni_kod_logo_white.png";
+    QString userFilePath = filePath + "Projekt-Poliglot/user_data/user_stats.txt"; //USER FILE PATH
     filePath += "Projekt-Poliglot/sprites/logo.png";
 
     QPixmap kodLogo(kodPath);
@@ -39,6 +41,16 @@ MainWindow::MainWindow(QWidget *parent)
     kodLogo = kodLogo.scaled(ui->kod->width(), ui->kod->height(), Qt::KeepAspectRatio);
     ui->kod->setPixmap(kodLogo);
     ui->logo->setPixmap(logo);
+
+    //USER STATS MANIPULATIONS
+    user player;
+    player.loadUserData(userFilePath);
+    //player.updatePoints('I',9);
+    //player.setLevel(2);
+    player.saveUserData(userFilePath);
+
+    //QString lev = QString::number(player.getLevel());
+    //QString poi = QString::number(player.getPoints());
 
     connect(ui->playButton, &QPushButton::clicked, this, [this](){
         ui->menu->hide();

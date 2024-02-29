@@ -13,12 +13,14 @@ SOURCES += \
     gridcell.cpp \
     main.cpp \
     mainwindow.cpp \
+    user.cpp \
     word_gen.cpp
 
 HEADERS += \
     board.h \
     gridcell.h \
     mainwindow.h \
+    user.h \
     word_gen.h
 
 FORMS += \
@@ -28,3 +30,6 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    baza_slow/README.txt
