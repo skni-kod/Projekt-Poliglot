@@ -11,6 +11,7 @@
 #include <QShortcut>
 #include "word_gen.h"
 #include "gridcell.h"
+#include "user.h"
 
 //<a target="_blank" href="https://icons8.com/icon/KLD9V6A735yg/done">Check</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
 
@@ -49,6 +50,8 @@ MainWindow::MainWindow(QWidget *parent)
     std::reverse(projectPath.begin(), projectPath.end());
     projectPath += "Projekt-Poliglot/";
 
+    QString userDataPath = projectPath + "user_data/user_stats.txt";
+
     QString kodPath = projectPath + "sprites/skni_kod_logo_white.png";
     QString logoPath = projectPath + "sprites/logo.png";
     QString closeIconPath = projectPath + "sprites/icons/icon-close-window.png";
@@ -65,6 +68,14 @@ MainWindow::MainWindow(QWidget *parent)
     kodLogo = kodLogo.scaled(ui->kod->width(), ui->kod->height(), Qt::KeepAspectRatio);
     ui->kod->setPixmap(kodLogo);
     ui->logo->setPixmap(logo);
+
+    //USER STATS MANIPULATIONS
+    user player;
+    player.loadUserData(userDataPath);
+    player.setPoints(7);
+    player.setLevel(3);
+    player.saveUserData(userDataPath);
+
 
     QString buttonPreset1 =                       "QPushButton {"
                             "border: 2px ;"

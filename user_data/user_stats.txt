@@ -1,2 +1,2 @@
-Level=2
-Points=18
+Level=3
+Points=7
