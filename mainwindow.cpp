@@ -163,6 +163,7 @@ void MainWindow::prepareGrid(){
     for (int i = 0; i < (int)s.size(); i++){
         for(int j = 0; j < (int)s[0].size() ; j++){
             if(s[i][j] != '#'){
+
                 GridCell *cell = new GridCell(s[i][j].toUpper(), true, size);
                 layout->addWidget(cell, i, j, Qt::AlignCenter);
             }
@@ -209,6 +210,7 @@ void MainWindow::prepareLetterButtons(){
         for(auto& button : letButtons){
             button->show();
         }
+
     });
 
     QShortcut *enterShortcut = new QShortcut(QKeySequence(Qt::Key_Enter), ui->checkButton);
