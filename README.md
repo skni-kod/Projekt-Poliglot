@@ -1,4 +1,13 @@
-gra słowna oparta o bazę słów w języku polskim bezosobowych - klon gierki na telefon dla starszych pań. 
-Będą losowo generowane plansze z pustymi polami i określony zestaw liter z którego trzeba będzie ułożyć słowo. 
-Technologicznie myśleliśmy zrobić to w c++ żeby pomóc sobie w kwestii c++ na 4 semestrze w oparciu o Qt i jakoś połączyć to z bazą słów. 
-Żeby nie było słów typu żarzanin to jeszcze będzie jakaś selekcja najpopularniejszych słów W perspektywie jakby poszło gładko byłby port na telefon.
+_**POLIGLOT**_
+
+Gra słowna oparta o bazę słów w formie bezosobowej w języku polskim.
+
+Z podanego wylosowanego zestawu liter ułóż słowa i sprawdź, czy pojawią się na planszy. Plansza kończy się po odgadnięciu wszystkich słów na danej planszy
+
+Projekt korzysta z bazy 10000 najpopularniejszych słów w j. polskim: (Otwarty słownik frekwencyjny leksemów V.06.2009, autor: Jerzy Kazojć.) 
+
+Jak uruchomić projekt na Twoim komputerze?
+1. Sklonuj repozytorium na dysk
+2. Skonfiguruj projekt używając do tego środowiska **QT Creator** w wersji co najmniej 12.0.0
+3. Podczas konfiguracji wybierz zestaw narzędzi **MinGW** (wersja Qt co najmniej 6.6.0)
+4. Projekt powinien być gotowy do zbudowania i uruchomienia.
