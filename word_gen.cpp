@@ -49,8 +49,14 @@ void word_gen::draw_letters()
             get_Letters.append(specialLetters[indexspecialLetter]);
         }
         else{
-        int kodAscii = QRandomGenerator::global()->bounded('a', 'z' + 1);
-        get_Letters.append(QChar(kodAscii));
+            QChar letter;
+        //int kodAscii = QRandomGenerator::global()->bounded('a', 'z' + 1);
+        //get_Letters.append(QChar(kodAscii));
+            do{
+            letter = QChar('a'+QRandomGenerator::global()->bounded(26));
+            }
+            while (letter == 'q' || letter == 'v' || letter == 'x');
+            get_Letters.append(letter);
         }
     }
 }
