@@ -15,7 +15,7 @@ for line in f:
     #if len(word) >= 3 and len(word) <= 8 and not word.isupper() and word.find(" ") == -1 and word.find(".") == -1 and word.find("v") == -1 and word.find("x") == -1:
     #    newF.write(word + "\n")
 
-    if len(word) >= 3 and len(word) <= 8 and not word.isupper() and re.fullmatch(pattern, word):
+    if len(word) >= 3 and len(word) <= 8 and not word.isupper() and re.fullmatch(pattern, word) and word[0].islower():
         newF.write(word.lower() + "\n")
 
 newF.close()

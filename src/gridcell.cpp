@@ -1,8 +1,10 @@
 #include "gridcell.h"
 #include "qboxlayout.h"
 #include "qlabel.h"
+#include "qtimer.h"
 
 GridCell::GridCell(QChar letter, bool isVisible, double size) {
+    m_letter = letter;
     setFixedSize(size, size);
 
     QString frameSheet = "QFrame {background-color: rgb(107, 150, 122) ; border-radius: ";
@@ -12,8 +14,6 @@ GridCell::GridCell(QChar letter, bool isVisible, double size) {
 
     QVBoxLayout *layout = new QVBoxLayout();
     layout->setAlignment(Qt::AlignCenter);
-
-    QLabel *label = nullptr;
 
     if(isVisible){
         label = new QLabel((QString)letter, this);
@@ -28,4 +28,19 @@ GridCell::GridCell(QChar letter, bool isVisible, double size) {
     label->setStyleSheet(sheet);
     layout->addWidget(label);
     this->setLayout(layout);
+}
+
+void GridCell::setLetterVisibility()
+{
+    label->setText(m_letter);
+    QString frameSheet = "QFrame {background-color: rgb(49, 69, 56) ; border-radius: ";
+    frameSheet += QString::number(width()/4);
+    frameSheet += "px;}";
+    setStyleSheet(frameSheet);
+    QTimer::singleShot(1000, [this](){
+        QString frameSheet = "QFrame {background-color: rgb(107, 150, 122) ; border-radius: ";
+        frameSheet += QString::number(width()/4);
+        frameSheet += "px;}";
+        setStyleSheet(frameSheet);
+    });
 }

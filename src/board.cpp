@@ -19,9 +19,10 @@ bool Board::compareLength(const QString& str1, const QString& str2){
     return str1.length() < str2.length();
 }
 
-void Board::addCoord(QChar letter, int x, int y){
+void Board::addCoord(QString word, QChar letter, int x, int y){
     signMap[letter].push_back({x,y});
     allCoords.push_back({x, y});
+    wordMap[word].push_back({x,y});
 }
 
 //sprawdzi czy nie skoliduje z innym slowem albo czy nie wyjdzie poza obszar
@@ -68,11 +69,13 @@ Board::Board(QObject *parent, std::vector<QString> wordsList, QVector<QChar> let
     minX = x;
     for (int i = 0; i < lWord.length(); i++){
         scheme[y][x] = lWord.at(i);
-        addCoord(lWord.at(i), x, y);
+        addCoord(lWord, lWord.at(i), x, y);
         maxX = x;
         x++;
     }
     minY = maxY = y;
+
+    presentWords.push_back(lWord);
 
     tips.push_back({x, y}); //wstaw kratkę po właściwym słowie
     usedWordsCount++;
@@ -95,9 +98,10 @@ Board::Board(QObject *parent, std::vector<QString> wordsList, QVector<QChar> let
         qDebug() << "Chosen crossLetter:  " << crossLetter;
 
         if(unsuccessfulTries >= maxTries){
-                qDebug() << "throwing away word: " << lWord;
-                unsuccessfulTries = 0;
-                continue;
+            removedWords.push_back(lWord);
+            qDebug() << "throwing away word: " << lWord;
+            unsuccessfulTries = 0;
+            continue;
         }
 
         if(signMap[crossLetter].size() == 0){
@@ -141,6 +145,11 @@ Board::Board(QObject *parent, std::vector<QString> wordsList, QVector<QChar> let
                 }
             }
 
+            //check if crossLetter has been already used
+            if(std::find(tips.begin(), tips.end(), (std::pair<int, int>){x,y}) != tips.end()){
+                ok = false;
+            }
+
             //jak nie można dać słowa bo koliduje to wróć słowo do words
             if(!ok) {
 
@@ -156,12 +165,14 @@ Board::Board(QObject *parent, std::vector<QString> wordsList, QVector<QChar> let
                 }
                 else{
                     //poddaj się i wywal słowo
+                    removedWords.push_back(lWord);
                     qDebug() << "throwing away word: " << lWord;
                     unsuccessfulTries = 0;
                     continue;
                 }
             }
 
+            presentWords.push_back(lWord);
             tips.push_back({x,y});
             usedWordsCount++;
 
@@ -173,7 +184,7 @@ Board::Board(QObject *parent, std::vector<QString> wordsList, QVector<QChar> let
                 qDebug() << "Now inserting letter: " << first.at(first.length() - 1 - (i-1)) << " from word: " << lWord;
                 scheme[yy][x] = first.at(first.length() - 1 - (i-1));
 
-                addCoord(first.at(first.length() - 1 - (i-1)), x, yy);
+                addCoord(lWord, first.at(first.length() - 1 - (i-1)), x, yy);
 
                 if(minY > yy) minY = yy;
                 if(maxY < yy) maxY = yy;
@@ -181,13 +192,16 @@ Board::Board(QObject *parent, std::vector<QString> wordsList, QVector<QChar> let
                 if(i == first.length()) //w ostatniej iteracji dodaj czubek
                     tips.push_back({x, yy-1});
             }
+
+            addCoord(lWord, crossLetter, x, y);
+
             for(int i = 1; i <= second.length(); i++){
 
                 int yy = y + i;
                 qDebug() << "Now inserting letter: " << second.at(i-1) << " from word: " << lWord;
                 scheme[yy][x] = second.at(i-1);
 
-                addCoord(second.at(i-1), x, yy);
+                addCoord(lWord, second.at(i-1), x, yy);
                 if(maxY < yy) maxY = yy;
                 if(minY > yy) minY = yy;
                 if(i == second.length())
@@ -218,6 +232,11 @@ Board::Board(QObject *parent, std::vector<QString> wordsList, QVector<QChar> let
                 }
             }
 
+            //check if crossLetter has been already used
+            if(std::find(tips.begin(), tips.end(), (std::pair<int, int>){x,y}) != tips.end()){
+                ok = false;
+            }
+
             if(!ok) {
                 if(unsuccessfulTries < maxTries){
                     words.push_back(lWord);
@@ -232,32 +251,38 @@ Board::Board(QObject *parent, std::vector<QString> wordsList, QVector<QChar> let
                 }
                 else{
                     unsuccessfulTries = 0;
+                    removedWords.push_back(lWord);
                     //poddaj się i wywal słowo
                     qDebug() << "throwing away word: " << lWord;
                     continue;
                 }
             }
 
+            presentWords.push_back(lWord);
             usedWordsCount++;
             tips.push_back({x,y});
             unsuccessfulTries = 0;
+
             for(int i = 1; i <= first.length(); i++){
 
                 int xx = x - i;
                 qDebug() << "Now inserting letter: " << first.at(first.length() - 1 - (i-1)) << " from word: " << lWord;
                 scheme[y][xx] = first.at(first.length() - 1 - (i-1));
-                addCoord(first.at(first.length() - 1 - (i-1)), xx, y);
+                addCoord(lWord, first.at(first.length() - 1 - (i-1)), xx, y);
                 if(minX > xx) minX = xx;
                 if(maxX < xx) maxX = xx;
                 if(i == first.length())
                     tips.push_back({xx-1, y});
             }
+
+            addCoord(lWord, crossLetter, x, y);
+
             for(int i = 1; i <= second.length(); i++){
 
                 int xx = x + i;
                 qDebug() << "Now inserting letter: " << second.at(i-1) << " from word: " << lWord;
                 scheme[y][xx] = second.at(i-1);
-                addCoord(second.at(i-1), xx, y);
+                addCoord(lWord, second.at(i-1), xx, y);
                 if(maxX < xx) maxX = xx;
                 if(minX > xx) minX = xx;
                 if(i == second.length())
@@ -298,9 +323,48 @@ int Board::Height() const
     return maxY - minY + 1;
 }
 
+std::vector<QString> &Board::PresentWords()
+{
+    return presentWords;
+}
+
+std::vector<QString> &Board::RemovedWords()
+{
+    return removedWords;
+}
+
+std::unordered_set<QString> &Board::AlreadyGuessedWords()
+{
+    return alreadyGuessedWords;
+}
+
+void Board::addGuessedWord(QString &guessedWord)
+{
+    alreadyGuessedWords.insert(guessedWord);
+}
+
 QVector<QChar>& Board::Letters()
 {
     return letters;
+}
+
+std::unordered_map<QString, std::vector<std::pair<int, int>>>& Board::WordMap()
+{
+    return wordMap;
+}
+
+//return 0 if words is not present
+//return 1 if word is present on a board
+//return 2 if word like that exists but it is not on the board
+int Board::checkWord(QString &wordToCheck)
+{
+    if(std::find(presentWords.begin(), presentWords.end(), wordToCheck) != presentWords.end()){
+        return 1;
+    }
+    if(std::find(removedWords.begin(), removedWords.end(), wordToCheck) != removedWords.end()){
+        return 2;
+    }
+    return 0;
 }
 
 void Board::operator=(const Board &obj)
@@ -312,7 +376,10 @@ void Board::operator=(const Board &obj)
         maxY = obj.maxY;
         usedWordsCount = obj.usedWordsCount;
         words = obj.words;
+        presentWords = obj.presentWords;
+        removedWords = obj.removedWords;
         signMap = obj.signMap;
+        wordMap = obj.wordMap;
         letters = obj.letters;
         allCoords = obj.allCoords;
         tips = obj.tips;
