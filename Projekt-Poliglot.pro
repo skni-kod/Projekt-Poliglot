@@ -9,22 +9,22 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    board.cpp \
-    gridcell.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    user.cpp \
-    word_gen.cpp
+    src/board.cpp \
+    src/gridcell.cpp \
+    src/main.cpp \
+    src/mainwindow.cpp \
+    src/user.cpp \
+    src/word_gen.cpp
 
 HEADERS += \
-    board.h \
-    gridcell.h \
-    mainwindow.h \
-    user.h \
-    word_gen.h
+    src/board.h \
+    src/gridcell.h \
+    src/mainwindow.h \
+    src/user.h \
+    src/word_gen.h
 
 FORMS += \
-    mainwindow.ui
+    ui/mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
