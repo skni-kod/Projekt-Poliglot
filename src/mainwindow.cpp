@@ -323,6 +323,14 @@ void MainWindow::setupButtons()
     connect(ui->closeButton, &QPushButton::clicked, this, [](){
         QApplication::exit(0);
     });
+    //Options
+    //Back Button
+    connect(ui->back_Button, &QPushButton::clicked,this,[this](){
+        ui->menuOptions->hide();
+        ui->menu->show();
+        ui->menu->resize(width, height);
+        //ui->verticalLayout->resize(width-50, height-50);
+    });
 }
 
 void MainWindow::updateGrid(QString& newWord)
