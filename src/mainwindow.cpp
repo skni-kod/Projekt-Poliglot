@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
         height = screenGeometry.height();
     }
 
-    setStyleSheet("background-color: #1f241e");
+    setStyleSheet("background-color: #3c4a39");
     ui->setupUi(this);
     setWindowTitle("Poliglot");
     ui->menu->resize(width, height);
@@ -245,13 +245,14 @@ void MainWindow::setupButtons()
     QString closeIconPath = projectPath + "sprites/icons/icon-close-window.png";
     QString checkIconPath = projectPath + "sprites/icons/icon-check.png";
     QString backspaceIconPath = projectPath + "sprites/icons/icon-backspace.png";
+    QString backIconPath = projectPath + "sprites/icons/icon-back-white.png";
 
     QPixmap kodLogo(kodPath);
     QPixmap logo(logoPath);
     QPixmap closeIconMap(closeIconPath);
     QPixmap checkIconMap(checkIconPath);
     QPixmap backspaceIconMap(backspaceIconPath);
-
+    QPixmap backIconMap(backIconPath);
     //set images
     logo = logo.scaled(ui->logo->width(), ui->logo->height(), Qt::KeepAspectRatio);
     kodLogo = kodLogo.scaled(ui->kod->width(), ui->kod->height(), Qt::KeepAspectRatio);
@@ -286,6 +287,11 @@ void MainWindow::setupButtons()
     ui->clearButton->setIcon(backspaceIcon);
     ui->clearButton->setIconSize(backspaceIconMap.rect().size());
     ui->clearButton->setStyleSheet(buttonPreset1);
+
+    QIcon backIcon(backIconMap);
+    ui->back_Button->setIcon(backIcon);
+    ui->back_Button->setIconSize(backIconMap.rect().size());
+    ui->back_Button->setStyleSheet(buttonPreset1);
 
     //define main menu play button behaviour
     connect(ui->playButton, &QPushButton::clicked, this, [this](){
@@ -329,8 +335,19 @@ void MainWindow::setupButtons()
         ui->menuOptions->hide();
         ui->menu->show();
         ui->menu->resize(width, height);
-        //ui->verticalLayout->resize(width-50, height-50);
+        ui->menuOptions->resize(width-50, height-50);
     });
+    //Text options
+
+    ui->okButton->setIcon(checkIcon);
+
+    ui->okButton->setStyleSheet(buttonPreset1);
+    ui->okButton->setIconSize(checkIconMap.rect().size());
+
+    QString styleSheet = "QCheckBox::indicator {width: 50px; height: 50px;   }"
+                         "QCheckBox { font-family: Arial; font-size: 50px; font-weight: bold; }";
+    ui->checkBox->setStyleSheet(styleSheet);
+    ui->checkBox_2->setStyleSheet(styleSheet);
 }
 
 void MainWindow::updateGrid(QString& newWord)
