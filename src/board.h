@@ -16,6 +16,7 @@ private:
     static int maxTries;
     int minX = maxSize, maxX = 0, minY = maxSize, maxY = 0; //będą użyte do przycięcia schematu o nieużywane pola
     int usedWordsCount = 0;
+    int guessedWordsCount = 0;
     //std::vector<QString> words = {"pobić", "opić", "bić", "obić", "poić", "pić"}, constWords;
     //std::vector<QString> words = {"kwit", "kotwica", "kwiat", "taki", "wacik", "koci", "kita", "kwita", "ciotka", "kwota", "owak", "owca"}, constWords;
     std::vector<QString> words, presentWords, removedWords;
@@ -43,6 +44,8 @@ public:
     std::unordered_map<QString, std::vector<std::pair<int, int>>>& WordMap();
     int checkWord(QString& wordToCheck);
     void operator=(const Board& obj);
+    void addGuessedWordCount();
+    int getGuessedWordCount() const;
 
 signals:
 };

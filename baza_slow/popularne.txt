@@ -82,7 +82,6 @@ wiele
 dwa
 ktoś
 lub
-ocet
 trzeba
 niech
 twarz
@@ -254,6 +253,7 @@ ach
 zamiast
 iść
 dawno
+ocet
 czemu
 wiadomo
 możliwe
@@ -2104,7 +2104,6 @@ niania
 wieczny
 grupka
 biel
-hall
 wystąpić
 sława
 sweter

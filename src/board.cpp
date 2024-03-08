@@ -387,3 +387,13 @@ void Board::operator=(const Board &obj)
     }
 }
 
+void Board::addGuessedWordCount()
+{
+    guessedWordsCount++;
+}
+
+int Board::getGuessedWordCount() const
+{
+    return guessedWordsCount;
+}
+
