@@ -72,3 +72,4 @@ CMakeLists.txt.user*
 *.dll
 *.exe
 
+user_data/user_stats.txt
