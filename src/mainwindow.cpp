@@ -8,6 +8,7 @@
 #include <QDir>
 #include <QGraphicsPixmapItem>
 #include <QMessageBox>
+#include <QTimer>
 #include <QShortcut>
 #include "word_gen.h"
 #include "gridcell.h"
@@ -150,10 +151,18 @@ void MainWindow::prepareLetterButtons(){
             updateGrid(wordToCheck);
             if(board.AlreadyGuessedWords().find(wordToCheck) == board.AlreadyGuessedWords().end()){
                 player.updatePoints('I', wordToCheck.length()*2);
+                board.addGuessedWordCount();
             }
             board.addGuessedWord(wordToCheck);
             ui->pointsLabel->setText((QString)"Punkty: " + QString::number(player.getPoints()));
             player.saveUserData(userDataPath);
+
+            //if board completed
+            if(board.getGuessedWordCount() == (int)board.PresentWords().size()){
+                QTimer::singleShot(3000, [](){
+                    QApplication::exit();
+                });
+            }
         }
         else if(result == 2){
 
@@ -179,7 +188,7 @@ void MainWindow::prepareLetterButtons(){
     });
 
     QShortcut *enterShortcut = new QShortcut(QKeySequence(Qt::Key_Enter), ui->checkButton);
-    QObject::connect(enterShortcut, &QShortcut::activated, ui->checkButton, &QPushButton::click);
+    connect(enterShortcut, &QShortcut::activated, ui->checkButton, &QPushButton::click);
 
     //ui->textEdit->resize(ui->textEdit->width(), ui->lettersFrame->height() - 150);
 
@@ -200,7 +209,7 @@ void MainWindow::prepareLetterButtons(){
                           "background-color: #263023;"
                           "min-width: 60px;"
                           "min-height: 60px;"
-                          "font: 20px;"
+                          "font: 35px;"
                       "}"
                       ""
                       "QPushButton:pressed {"
