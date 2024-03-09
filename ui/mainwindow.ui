@@ -28,8 +28,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>1920</width>
-      <height>1080</height>
+      <width>1</width>
+      <height>1</height>
      </rect>
     </property>
     <widget class="QWidget" name="verticalLayoutWidget">
@@ -651,8 +651,8 @@
      <rect>
       <x>-2</x>
       <y>18</y>
-      <width>1</width>
-      <height>1</height>
+      <width>1920</width>
+      <height>1080</height>
      </rect>
     </property>
     <widget class="QWidget" name="verticalWidget_3" native="true">
@@ -804,6 +804,39 @@
               </widget>
              </item>
              <item>
+              <spacer name="verticalSpacer_14">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_15">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="checkBox_3">
+               <property name="text">
+                <string>Reset punktów</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <spacer name="verticalSpacer_11">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
@@ -902,7 +935,7 @@
      <x>0</x>
      <y>0</y>
      <width>1920</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
