@@ -365,6 +365,18 @@ void MainWindow::setupButtons()
                          "QCheckBox { font-family: Arial; font-size: 50px; font-weight: bold; }";
     ui->checkBox->setStyleSheet(styleSheet);
     ui->checkBox_2->setStyleSheet(styleSheet);
+    ui->checkBox_3->setStyleSheet(styleSheet);
+
+    //Fullscreen Button
+    ui->checkBox->setChecked(true);
+    connect(ui->okButton, &QPushButton::clicked,this,[this](){
+        if(ui->checkBox->isChecked()){
+            showFullScreen();
+        }
+        else {
+            showNormal();
+        }
+    });
 }
 
 void MainWindow::updateGrid(QString& newWord)
