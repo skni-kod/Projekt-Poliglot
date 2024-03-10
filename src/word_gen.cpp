@@ -9,13 +9,15 @@ void word_gen::showResult()
 {
     draw_letters();
     showLetters();
-    QString filePath1 = QDir::currentPath();
+    // QString filePath1 = QDir::currentPath();
+    // qDebug() << filePath1;
 
-    std::reverse(filePath1.begin(), filePath1.end());
-    int indToRem = filePath1.indexOf("/");
-    filePath1 = filePath1.sliced(indToRem);
-    std::reverse(filePath1.begin(), filePath1.end());
-    filePath1 += "Projekt-Poliglot/baza_slow/popularne.txt";
+    // std::reverse(filePath1.begin(), filePath1.end());
+    // int indToRem = filePath1.indexOf("/");
+    // filePath1 = filePath1.sliced(indToRem);
+    // std::reverse(filePath1.begin(), filePath1.end());
+    // filePath1 += "Projekt-Poliglot/baza_slow/popularne.txt";
+    QString filePath1 = "://baza_slow/popularne.txt";
     qDebug() <<filePath1;
     counter =0;
     get_Word_File(filePath1);

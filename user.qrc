@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>user_data/user_stats.txt</file>
+    </qresource>
+</RCC>

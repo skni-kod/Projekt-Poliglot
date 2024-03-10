@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
         height = screenGeometry.height();
     }
 
-    setStyleSheet("background-color: #3c4a39");
+    setStyleSheet("background-color: #2e382b");
     ui->setupUi(this);
     setWindowTitle("Poliglot");
     ui->menu->resize(width, height);
@@ -45,8 +45,9 @@ MainWindow::MainWindow(QWidget *parent)
     std::reverse(projectPath.begin(), projectPath.end());
     projectPath += "Projekt-Poliglot/";
 
-    userDataPath = projectPath + "user_data/user_stats.txt";
+    //userDataPath = projectPath + "user_data/user_stats.txt";
 
+    userDataPath = ":/user_data/user_stats.txt";
     setupButtons();
 
     ui->verticalLayoutWidget->setFixedSize(width, height);
@@ -111,6 +112,7 @@ void MainWindow::prepareGrid(){
         }
         ui->textBrowser->append(temp);
     }
+    ui->textBrowser->hide();
 
     ui->pointsLabel->setText((QString)"Punkty: " + QString::number(player.getPoints()));
 }
@@ -249,12 +251,18 @@ void MainWindow::setupButtons()
     ui->closeButton->setStyleSheet(buttonPreset);
 
     //set paths for used icons and images
-    QString kodPath = projectPath + "sprites/skni_kod_logo_white.png";
-    QString logoPath = projectPath + "sprites/logo.png";
-    QString closeIconPath = projectPath + "sprites/icons/icon-close-window.png";
-    QString checkIconPath = projectPath + "sprites/icons/icon-check.png";
-    QString backspaceIconPath = projectPath + "sprites/icons/icon-backspace.png";
-    QString backIconPath = projectPath + "sprites/icons/icon-back-white.png";
+    // QString kodPath = projectPath + "sprites/skni_kod_logo_white.png";
+    // QString logoPath = projectPath + "sprites/logo.png";
+    // QString closeIconPath = projectPath + "sprites/icons/icon-close-window.png";
+    // QString checkIconPath = projectPath + "sprites/icons/icon-check.png";
+    // QString backspaceIconPath = projectPath + "sprites/icons/icon-backspace.png";
+    // QString backIconPath = projectPath + "sprites/icons/icon-back-white.png";
+    QString kodPath = "://sprites/skni_kod_logo_white.png";
+    QString logoPath = ":/sprites/logo.png";
+    QString closeIconPath =  ":/sprites/icons/icon-close-window.png";
+    QString checkIconPath = ":/sprites/icons/icon-check.png";
+    QString backspaceIconPath = ":/sprites/icons/icon-backspace.png";
+    QString backIconPath = ":/sprites/icons/icon-back-white.png";
 
     QPixmap kodLogo(kodPath);
     QPixmap logo(logoPath);
@@ -378,4 +386,5 @@ void MainWindow::updateGrid(QString& newWord)
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete gridLayout;
 }

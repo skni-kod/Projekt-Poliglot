@@ -26,7 +26,14 @@ HEADERS += \
 FORMS += \
     ui/mainwindow.ui
 
+RESOURCES += \
+    images.qrc \
+    user.qrc \
+    wordBase.qrc
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+
