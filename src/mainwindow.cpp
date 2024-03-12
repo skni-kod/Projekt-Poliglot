@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->menu->resize(width, height);
     ui->game->hide();
     ui->menuOptions->hide();
+    ui->difficultySelection->hide();
 
     //set project path
     projectPath = QDir::currentPath();
@@ -212,6 +213,7 @@ void MainWindow::prepareLetterButtons(){
                           "min-width: 60px;"
                           "min-height: 60px;"
                           "font: 35px;"
+                          "font-family: Book Antiqua;"
                       "}"
                       ""
                       "QPushButton:pressed {"
@@ -310,14 +312,18 @@ void MainWindow::setupButtons()
     ui->back_Button->setIconSize(backIconMap.rect().size());
     ui->back_Button->setStyleSheet(buttonPreset1);
 
+    ui->difficultyBackButton->setIcon(backIcon);
+    ui->difficultyBackButton->setIconSize(backIconMap.rect().size());
+    ui->difficultyBackButton->setStyleSheet(buttonPreset1);
+
     //define main menu play button behaviour
     connect(ui->playButton, &QPushButton::clicked, this, [this](){
         ui->menu->hide();
-        ui->game->show();
-        ui->game->resize(width, height);
-        ui->horizontalLayoutWidget_7->setFixedSize(width-50, height-50);
-        prepareGrid();
-        prepareLetterButtons();
+        ui->difficultySelection->show();
+        ui->difficultySelection->resize(width,height);
+        ui->verticalWidget_2->resize(width,height);
+
+
     });
 
     connect(ui->optionsButton, &QPushButton::clicked, this, [this](){
@@ -361,8 +367,52 @@ void MainWindow::setupButtons()
     ui->okButton->setStyleSheet(buttonPreset1);
     ui->okButton->setIconSize(checkIconMap.rect().size());
 
+    //difficulty Buttons
+    connect(ui->difficultyBackButton, QPushButton::clicked, this, [this](){
+        ui->difficultySelection->hide();
+        ui->menu->show();
+    });
+
+    QString diffButtonPreset = "QPushButton {border: 10px; border-radius: 40px; background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #253624, stop: 1 #679465);}";
+
+
+    ui->easyButton->setStyleSheet(diffButtonPreset);
+    ui->mediumButton->setStyleSheet(diffButtonPreset);
+    ui->hardButton->setStyleSheet(diffButtonPreset);
+
+    //EASY INIT
+    connect(ui->easyButton, QPushButton::clicked, this, [this](){
+        ui->difficultySelection->hide();
+        ui->game->show();
+        ui->game->resize(width, height);
+        ui->horizontalLayoutWidget_7->setFixedSize(width-50, height-50);
+        prepareGrid();
+        prepareLetterButtons();
+    });
+
+    //MEDIUM INIT
+    connect(ui->mediumButton, QPushButton::clicked, this, [this](){
+        ui->difficultySelection->hide();
+        ui->game->show();
+        ui->game->resize(width, height);
+        ui->horizontalLayoutWidget_7->setFixedSize(width-50, height-50);
+        prepareGrid();
+        prepareLetterButtons();
+    });
+
+    //HARD INIT
+    connect(ui->hardButton, QPushButton::clicked, this, [this](){
+        ui->difficultySelection->hide();
+        ui->game->show();
+        ui->game->resize(width, height);
+        ui->horizontalLayoutWidget_7->setFixedSize(width-50, height-50);
+        prepareGrid();
+        prepareLetterButtons();
+    });
+
+
     QString styleSheet = "QCheckBox::indicator {width: 50px; height: 50px;   }"
-                         "QCheckBox { font-family: Arial; font-size: 50px; font-weight: bold; }";
+                         "QCheckBox { font-family: Book Antiqua; font-size: 50px; }";
     ui->checkBox->setStyleSheet(styleSheet);
     ui->checkBox_2->setStyleSheet(styleSheet);
     ui->checkBox_3->setStyleSheet(styleSheet);
@@ -374,7 +424,11 @@ void MainWindow::setupButtons()
             showFullScreen();
         }
         else {
-            showNormal();
+            this->showNormal();
+
+            width = 0.9*width;
+            height = 0.9*height;
+            resize(width, height);
         }
     });
 }
