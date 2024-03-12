@@ -10,5 +10,6 @@
         <file>sprites/icons/icon-close-window-black.png</file>
         <file>sprites/icons/icon-close-window.png</file>
         <file>sprites/logo.png</file>
+        <file>sprites/icons/poliglot-icon.png</file>
     </qresource>
 </RCC>

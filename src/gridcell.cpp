@@ -12,7 +12,7 @@ GridCell::GridCell(QChar letter, bool isVisible, double size) {
     frameSheet += "px;}";
     setStyleSheet(frameSheet);
 
-    QVBoxLayout *layout = new QVBoxLayout();
+    layout = new QVBoxLayout();
     layout->setAlignment(Qt::AlignCenter);
 
     if(isVisible){
@@ -22,7 +22,8 @@ GridCell::GridCell(QChar letter, bool isVisible, double size) {
 
     label->setAlignment(Qt::AlignCenter);
     int fontSize = size/2;
-    QString sheet = "font: ";
+    QString sheet = "font-family: Book Antiqua; "
+                    "font:";
     sheet += QString::number(fontSize);
     sheet += "px";
     label->setStyleSheet(sheet);
@@ -44,3 +45,11 @@ void GridCell::setLetterVisibility()
         setStyleSheet(frameSheet);
     });
 }
+
+GridCell::~GridCell()
+{
+    qDebug() << "deleting gridcell...";
+    delete label;
+    delete layout;
+}
+

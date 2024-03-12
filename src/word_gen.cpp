@@ -3,7 +3,11 @@
 #include <QDebug>
 #include <QDir>
 #include <QCoreApplication>
-word_gen::word_gen(){}
+
+word_gen::word_gen(int difficulty)
+{
+    this->difficulty = difficulty;
+}
 
 void word_gen::showResult()
 {
@@ -40,7 +44,22 @@ void word_gen::draw_letters()
 {
     get_Letters.clear();
 
-    nr_letters = QRandomGenerator::global()->bounded(6) + 5;
+    //easy - 5 to 6 letters
+    //medium - 7 to 8 letters
+    //hard - 9 to 10 letters
+    switch(difficulty){
+    case 1:
+        nr_letters = QRandomGenerator::global()->bounded(5,7);
+        break;
+    case 2:
+        nr_letters = QRandomGenerator::global()->bounded(7,9);
+        break;
+    case 3:
+        nr_letters = QRandomGenerator::global()->bounded(9,11);
+        break;
+    }
+
+    //nr_letters = QRandomGenerator::global()->bounded(6) + 5;
 
     for (int i = 0; i < nr_letters; ++i) {
         int randomNr = QRandomGenerator::global()->bounded(5);
@@ -84,7 +103,28 @@ void word_gen::get_Word_File(const QString& fileName)
 
     }
     plik.close();
-    if(counter<=5){
+
+    int minWordCount = 0;
+    //minimum required words amount:
+    // easy - 5 words
+    // medium - 6 words
+    // hard - 8 words
+    switch(difficulty){
+    case 1:
+        minWordCount = 5;
+        break;
+    case 2:
+        minWordCount = 6;
+        break;
+    case 3:
+        minWordCount = 10;
+        break;
+    default:
+        qDebug() << "Wrong difficulty!";
+        minWordCount = 6;
+    }
+
+    if(counter<minWordCount){
         qDebug() << "Not enough words. Draws again...";
         wordsDrawn.clear();
         draw_letters();
