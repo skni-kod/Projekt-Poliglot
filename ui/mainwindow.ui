@@ -41,7 +41,7 @@
        <height>951</height>
       </rect>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,1,1,1,0">
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
@@ -168,7 +168,7 @@
            </property>
            <property name="font">
             <font>
-             <family>Rockwell</family>
+             <family>Book Antiqua</family>
              <pointsize>40</pointsize>
             </font>
            </property>
@@ -199,7 +199,7 @@
            </property>
            <property name="font">
             <font>
-             <family>Rockwell</family>
+             <family>Book Antiqua</family>
              <pointsize>40</pointsize>
             </font>
            </property>
@@ -236,7 +236,7 @@
            </property>
            <property name="font">
             <font>
-             <family>Rockwell</family>
+             <family>Book Antiqua</family>
              <pointsize>40</pointsize>
             </font>
            </property>
@@ -321,6 +321,9 @@
         <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Minimum</enum>
+        </property>
         <property name="sizeHint" stdset="0">
          <size>
           <width>20</width>
@@ -340,8 +343,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>1</width>
-      <height>1</height>
+      <width>1920</width>
+      <height>1080</height>
      </rect>
     </property>
     <widget class="QWidget" name="horizontalLayoutWidget_7">
@@ -551,6 +554,7 @@
              <widget class="QTextEdit" name="textEdit">
               <property name="font">
                <font>
+                <family>Book Antiqua</family>
                 <pointsize>25</pointsize>
                </font>
               </property>
@@ -649,17 +653,17 @@
    <widget class="QWidget" name="menuOptions" native="true">
     <property name="geometry">
      <rect>
-      <x>-2</x>
-      <y>18</y>
-      <width>1920</width>
-      <height>1080</height>
+      <x>0</x>
+      <y>0</y>
+      <width>1</width>
+      <height>1</height>
      </rect>
     </property>
     <widget class="QWidget" name="verticalWidget_3" native="true">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>10</y>
+       <x>0</x>
+       <y>0</y>
        <width>1901</width>
        <height>1011</height>
       </rect>
@@ -710,7 +714,7 @@
       </item>
       <item>
        <widget class="QWidget" name="horizontalWidget" native="true">
-        <layout class="QHBoxLayout" name="optionsLayout">
+        <layout class="QHBoxLayout" name="optionsLayout" stretch="0,0,0">
          <item>
           <spacer name="horizontalSpacer_11">
            <property name="orientation">
@@ -925,6 +929,242 @@
         </item>
        </layout>
       </item>
+      <item>
+       <spacer name="verticalSpacer_18">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Minimum</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="difficultySelection" native="true">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>1</width>
+      <height>1</height>
+     </rect>
+    </property>
+    <widget class="QWidget" name="verticalWidget_2" native="true">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>1011</width>
+       <height>551</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_6" stretch="1,1,1,2">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_12">
+        <item>
+         <widget class="QPushButton" name="difficultyBackButton">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_18">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_17">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Expanding</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_9">
+        <item>
+         <spacer name="horizontalSpacer_17">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_9">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetDefaultConstraint</enum>
+          </property>
+          <item>
+           <widget class="QPushButton" name="easyButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>200</width>
+              <height>100</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>500</width>
+              <height>150</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Book Antiqua</family>
+              <pointsize>28</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Łatwy</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="mediumButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>200</width>
+              <height>100</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>500</width>
+              <height>150</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Book Antiqua</family>
+              <pointsize>28</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Średni</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="hardButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>200</width>
+              <height>100</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>500</width>
+              <height>150</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Book Antiqua</family>
+              <pointsize>28</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Trudny</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_16">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_16">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Expanding</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
      </layout>
     </widget>
    </widget>
@@ -935,7 +1175,7 @@
      <x>0</x>
      <y>0</y>
      <width>1920</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

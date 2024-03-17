@@ -6,7 +6,7 @@
 class word_gen
 {
 public:
-    word_gen();
+    word_gen(int difficulty);
     void showResult();
     int nr_letters = 0;
     QVector<QChar> get_Letters;
@@ -14,6 +14,7 @@ public:
     int counter = 0;
 
 private:
+    int difficulty; //1 - ez, 2 - mid, 3 - hard
     QVector<QChar> pol_letters;
     QRandomGenerator generator;
     void showLetters();

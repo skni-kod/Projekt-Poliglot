@@ -27,14 +27,17 @@ MainWindow::MainWindow(QWidget *parent)
         QRect screenGeometry = screen->geometry();
         width = screenGeometry.width();
         height = screenGeometry.height();
+        screenWidth = width;
+        screenHeight = height;
     }
 
-    setStyleSheet("background-color: #3c4a39");
+    setStyleSheet("background-color: #2e382b");
     ui->setupUi(this);
     setWindowTitle("Poliglot");
     ui->menu->resize(width, height);
     ui->game->hide();
     ui->menuOptions->hide();
+    ui->difficultySelection->hide();
 
     //set project path
     projectPath = QDir::currentPath();
@@ -45,26 +48,41 @@ MainWindow::MainWindow(QWidget *parent)
     std::reverse(projectPath.begin(), projectPath.end());
     projectPath += "Projekt-Poliglot/";
 
-    userDataPath = projectPath + "user_data/user_stats.txt";
+    //userDataPath = projectPath + "user_data/user_stats.txt";
 
+    userDataPath = ":/user_data/user_stats.txt";
     setupButtons();
 
-    ui->verticalLayoutWidget->setFixedSize(width, height);
+    ui->verticalLayoutWidget->resize(width, height);
 
     //USER STATS MANIPULATIONS
     player.loadUserData(userDataPath);
     player.saveUserData(userDataPath);
 }
 
-void MainWindow::prepareGrid(){
-    word_gen word;
+void MainWindow::prepareGrid(int diff){
+    this->difficulty = diff;
+    word_gen word(diff);
     word.showResult();
     board = Board(nullptr, word.getWords(), word.get_Letters);
     int count = board.UsedWordsCount();
 
+    int minCount;
 
-    while(count < 4){
-        word_gen word;
+    switch(diff){
+    case 1:
+        minCount = 4;
+        break;
+    case 2:
+        minCount = 6;
+        break;
+    case 3:
+        minCount = 8;
+        break;
+    }
+
+    while(count < minCount){
+        word_gen word(diff);
         word.showResult();
         board = Board(nullptr, word.getWords(), word.get_Letters);
         count = board.UsedWordsCount();
@@ -88,12 +106,27 @@ void MainWindow::prepareGrid(){
         ui->gridFrame->setFixedWidth(frameSize);
     }
 
-    gridLayout = new QGridLayout(ui->gridFrame);
+    if(gridLayout != nullptr){
+        QLayoutItem *item;
+        while ((item = gridLayout->takeAt(0)) != nullptr) {
+            // Sprawdzanie, czy element jest widżetem
+            if (QWidget *widget = item->widget()) {
+                // Jeśli jest widżetem, usuń go
+                widget->deleteLater();
+            }
+            // Usuń element z układu
+            delete item;
+        }
+    }
+
+    if (!gridLayout)
+        gridLayout = new QGridLayout(ui->gridFrame);
+    //gridLayout = new QGridLayout(ui->gridFrame);
 
     for (int i = 0; i < (int)s.size(); i++){
         for(int j = 0; j < (int)s[0].size() ; j++){
             if(s[i][j] != '#'){
-
+                qDebug()<<"Adding new gridCell " << s[i][j];
                 GridCell *cell = new GridCell(s[i][j].toUpper(), false, gridCellSize);
                 gridLayout->addWidget(cell, i, j, Qt::AlignCenter);
             }
@@ -111,6 +144,7 @@ void MainWindow::prepareGrid(){
         }
         ui->textBrowser->append(temp);
     }
+    ui->textBrowser->show();
 
     ui->pointsLabel->setText((QString)"Punkty: " + QString::number(player.getPoints()));
 }
@@ -159,8 +193,9 @@ void MainWindow::prepareLetterButtons(){
 
             //if board completed
             if(board.getGuessedWordCount() == (int)board.PresentWords().size()){
-                QTimer::singleShot(3000, [](){
-                    QApplication::exit();
+                QTimer::singleShot(3000, [this](){
+                    startNewBoard(difficulty);
+
                 });
             }
         }
@@ -192,7 +227,21 @@ void MainWindow::prepareLetterButtons(){
 
     //ui->textEdit->resize(ui->textEdit->width(), ui->lettersFrame->height() - 150);
 
-    QGridLayout *layout = new QGridLayout(ui->lettersFrame);
+    if(lettersGridLayout != nullptr){
+        QLayoutItem *item;
+        while ((item = gridLayout->takeAt(0)) != nullptr) {
+            // Sprawdzanie, czy element jest widżetem
+            if (QWidget *widget = item->widget()) {
+                // Jeśli jest widżetem, usuń go
+                widget->deleteLater();
+            }
+            // Usuń element z układu
+            delete item;
+        }
+        delete lettersGridLayout;
+    }
+
+    lettersGridLayout = new QGridLayout(ui->lettersFrame);
 
     int letterIndex = 0;
     for (int i = 0; i < frameMult; i++){
@@ -210,6 +259,7 @@ void MainWindow::prepareLetterButtons(){
                           "min-width: 60px;"
                           "min-height: 60px;"
                           "font: 35px;"
+                          "font-family: Book Antiqua;"
                       "}"
                       ""
                       "QPushButton:pressed {"
@@ -227,8 +277,8 @@ void MainWindow::prepareLetterButtons(){
             QLabel *emptyWidget = new QLabel();
             emptyWidget->setFixedSize(60,60);
 
-            layout->addWidget(emptyWidget, i, j, Qt::AlignCenter);
-            layout->addWidget(button, i, j, Qt::AlignCenter);
+            lettersGridLayout->addWidget(emptyWidget, i, j, Qt::AlignCenter);
+            lettersGridLayout->addWidget(button, i, j, Qt::AlignCenter);
 
             if(letterIndex + 1 == let.size()){
                 break;
@@ -240,6 +290,16 @@ void MainWindow::prepareLetterButtons(){
     }
 }
 
+void MainWindow::startNewBoard(int diff){
+    difficulty = diff;
+    ui->difficultySelection->hide();
+    ui->game->show();
+    ui->game->resize(width, height);
+    ui->horizontalLayoutWidget_7->setFixedSize(width-50, height-50);
+    prepareGrid(difficulty);
+    prepareLetterButtons();
+}
+
 void MainWindow::setupButtons()
 {
     //set style for main menu buttons
@@ -249,12 +309,13 @@ void MainWindow::setupButtons()
     ui->closeButton->setStyleSheet(buttonPreset);
 
     //set paths for used icons and images
-    QString kodPath = projectPath + "sprites/skni_kod_logo_white.png";
-    QString logoPath = projectPath + "sprites/logo.png";
-    QString closeIconPath = projectPath + "sprites/icons/icon-close-window.png";
-    QString checkIconPath = projectPath + "sprites/icons/icon-check.png";
-    QString backspaceIconPath = projectPath + "sprites/icons/icon-backspace.png";
-    QString backIconPath = projectPath + "sprites/icons/icon-back-white.png";
+    QString kodPath = "://sprites/skni_kod_logo_white.png";
+    QString logoPath = ":/sprites/logo.png";
+    QString closeIconPath =  ":/sprites/icons/icon-close-window.png";
+    QString checkIconPath = ":/sprites/icons/icon-check.png";
+    QString backspaceIconPath = ":/sprites/icons/icon-backspace.png";
+    QString backIconPath = ":/sprites/icons/icon-back-white.png";
+    QString poliglotIconPath = ":/sprites/icons/poliglot-icon.png";
 
     QPixmap kodLogo(kodPath);
     QPixmap logo(logoPath);
@@ -262,6 +323,11 @@ void MainWindow::setupButtons()
     QPixmap checkIconMap(checkIconPath);
     QPixmap backspaceIconMap(backspaceIconPath);
     QPixmap backIconMap(backIconPath);
+    QPixmap poliglotIconMap(poliglotIconPath);
+
+    QIcon poliglotIcon(poliglotIconMap);
+    this->setWindowIcon(poliglotIcon);
+
     //set images
     logo = logo.scaled(ui->logo->width(), ui->logo->height(), Qt::KeepAspectRatio);
     kodLogo = kodLogo.scaled(ui->kod->width(), ui->kod->height(), Qt::KeepAspectRatio);
@@ -302,21 +368,23 @@ void MainWindow::setupButtons()
     ui->back_Button->setIconSize(backIconMap.rect().size());
     ui->back_Button->setStyleSheet(buttonPreset1);
 
+    ui->difficultyBackButton->setIcon(backIcon);
+    ui->difficultyBackButton->setIconSize(backIconMap.rect().size());
+    ui->difficultyBackButton->setStyleSheet(buttonPreset1);
+
     //define main menu play button behaviour
     connect(ui->playButton, &QPushButton::clicked, this, [this](){
         ui->menu->hide();
-        ui->game->show();
-        ui->game->resize(width, height);
-        ui->horizontalLayoutWidget_7->setFixedSize(width-50, height-50);
-        prepareGrid();
-        prepareLetterButtons();
+        ui->difficultySelection->show();
+        ui->difficultySelection->resize(width,height);
+        ui->verticalWidget_2->resize(width,height);
     });
 
     connect(ui->optionsButton, &QPushButton::clicked, this, [this](){
         ui->menu->hide();
         ui->menuOptions->show();
         ui->menuOptions->resize(width, height);
-        ui->verticalWidget_3->resize(width-50, height-50);
+        ui->verticalWidget_3->resize(width, height);
     });
 
     connect(ui->gameCloseButton, &QPushButton::clicked, this, [](){
@@ -344,7 +412,8 @@ void MainWindow::setupButtons()
         ui->menuOptions->hide();
         ui->menu->show();
         ui->menu->resize(width, height);
-        ui->menuOptions->resize(width-50, height-50);
+        ui->menuOptions->resize(width, height);
+        ui->verticalLayoutWidget->resize(width, height);
     });
     //Text options
 
@@ -353,8 +422,36 @@ void MainWindow::setupButtons()
     ui->okButton->setStyleSheet(buttonPreset1);
     ui->okButton->setIconSize(checkIconMap.rect().size());
 
+    //difficulty Buttons
+    connect(ui->difficultyBackButton, &QPushButton::clicked, this, [this](){
+        ui->difficultySelection->hide();
+        ui->menu->show();
+    });
+
+    QString diffButtonPreset = "QPushButton {border: 10px; border-radius: 40px; background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #253624, stop: 1 #679465);}";
+
+    ui->easyButton->setStyleSheet(diffButtonPreset);
+    ui->mediumButton->setStyleSheet(diffButtonPreset);
+    ui->hardButton->setStyleSheet(diffButtonPreset);
+
+    //EASY INIT
+    connect(ui->easyButton, &QPushButton::clicked, this, [this](){
+        startNewBoard(1);
+    });
+
+    //MEDIUM INIT
+    connect(ui->mediumButton, &QPushButton::clicked, this, [this](){
+        startNewBoard(2);
+    });
+
+    //HARD INIT
+    connect(ui->hardButton, &QPushButton::clicked, this, [this](){
+        startNewBoard(3);
+    });
+
+
     QString styleSheet = "QCheckBox::indicator {width: 50px; height: 50px;   }"
-                         "QCheckBox { font-family: Arial; font-size: 50px; font-weight: bold; }";
+                         "QCheckBox { font-family: Book Antiqua; font-size: 50px; }";
     ui->checkBox->setStyleSheet(styleSheet);
     ui->checkBox_2->setStyleSheet(styleSheet);
     ui->checkBox_3->setStyleSheet(styleSheet);
@@ -364,9 +461,18 @@ void MainWindow::setupButtons()
     connect(ui->okButton, &QPushButton::clicked,this,[this](){
         if(ui->checkBox->isChecked()){
             showFullScreen();
+            width = screenWidth;
+            height = screenHeight;
+            ui->menuOptions->resize(width, height);
+            ui->verticalWidget_3->resize(width, height);
         }
         else {
-            showNormal();
+            this->showNormal();
+            width = 0.9*screenWidth;
+            height = 0.9*screenHeight;
+            resize(width, height);
+            ui->menuOptions->resize(width, height);
+            ui->verticalWidget_3->resize(width, height);
         }
     });
 }
@@ -390,4 +496,5 @@ void MainWindow::updateGrid(QString& newWord)
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete gridLayout;
 }

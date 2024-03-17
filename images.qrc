@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file>sprites/skni_kod_logo_white.png</file>
+        <file>sprites/icons/icon-back-white.png</file>
+        <file>sprites/icons/icon-backspace-black.png</file>
+        <file>sprites/icons/icon-backspace-old.png</file>
+        <file>sprites/icons/icon-backspace.png</file>
+        <file>sprites/icons/icon-check-black.png</file>
+        <file>sprites/icons/icon-check.png</file>
+        <file>sprites/icons/icon-close-window-black.png</file>
+        <file>sprites/icons/icon-close-window.png</file>
+        <file>sprites/logo.png</file>
+        <file>sprites/icons/poliglot-icon.png</file>
+    </qresource>
+</RCC>

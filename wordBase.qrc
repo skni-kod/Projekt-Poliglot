@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>baza_slow/popularne.txt</file>
+    </qresource>
+</RCC>
