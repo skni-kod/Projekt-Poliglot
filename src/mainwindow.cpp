@@ -22,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     QScreen *screen = QApplication::primaryScreen();
 
+    isFirstBoard = true;
+
     //gets screen resolution
     if(screen){
         QRect screenGeometry = screen->geometry();
@@ -123,15 +125,20 @@ void MainWindow::prepareGrid(int diff){
         gridLayout = new QGridLayout(ui->gridFrame);
     //gridLayout = new QGridLayout(ui->gridFrame);
 
-    for (int i = 0; i < (int)s.size(); i++){
-        for(int j = 0; j < (int)s[0].size() ; j++){
-            if(s[i][j] != '#'){
-                qDebug()<<"Adding new gridCell " << s[i][j];
-                GridCell *cell = new GridCell(s[i][j].toUpper(), false, gridCellSize);
-                gridLayout->addWidget(cell, i, j, Qt::AlignCenter);
+    if(isFirstBoard){
+        for (int i = 0; i < (int)s.size(); i++){
+            for(int j = 0; j < (int)s[0].size() ; j++){
+                if(s[i][j] != '#'){
+                    qDebug()<<"Adding new gridCell " << s[i][j];
+                    GridCell *cell = new GridCell(s[i][j].toUpper(), false, gridCellSize);
+                    gridLayout->addWidget(cell, i, j, Qt::AlignCenter);
+                }
             }
         }
     }
+
+
+    ui->textBrowser->clear();
 
     for (const auto &row : s){
         QString temp;
@@ -183,10 +190,12 @@ void MainWindow::prepareLetterButtons(){
             //there is this word on a board
             qDebug() << "word is present: " << wordToCheck;
             updateGrid(wordToCheck);
+
             if(board.AlreadyGuessedWords().find(wordToCheck) == board.AlreadyGuessedWords().end()){
                 player.updatePoints('I', wordToCheck.length()*2);
                 board.addGuessedWordCount();
             }
+
             board.addGuessedWord(wordToCheck);
             ui->pointsLabel->setText((QString)"Punkty: " + QString::number(player.getPoints()));
             player.saveUserData(userDataPath);
@@ -195,7 +204,7 @@ void MainWindow::prepareLetterButtons(){
             if(board.getGuessedWordCount() == (int)board.PresentWords().size()){
                 QTimer::singleShot(3000, [this](){
                     startNewBoard(difficulty);
-
+                    isFirstBoard = false;
                 });
             }
         }
@@ -203,9 +212,11 @@ void MainWindow::prepareLetterButtons(){
 
             //there is word like that but not on a board
             qDebug() << "word exists: " << wordToCheck;
+
             if(board.AlreadyGuessedWords().find(wordToCheck) == board.AlreadyGuessedWords().end()){
                 player.updatePoints('I', wordToCheck.length()*3);
             }
+
             board.addGuessedWord(wordToCheck);
             ui->pointsLabel->setText((QString)"Punkty: " + QString::number(player.getPoints()));
             player.saveUserData(userDataPath);
@@ -226,22 +237,24 @@ void MainWindow::prepareLetterButtons(){
     connect(enterShortcut, &QShortcut::activated, ui->checkButton, &QPushButton::click);
 
     //ui->textEdit->resize(ui->textEdit->width(), ui->lettersFrame->height() - 150);
-
-    if(lettersGridLayout != nullptr){
-        QLayoutItem *item;
-        while ((item = gridLayout->takeAt(0)) != nullptr) {
-            // Sprawdzanie, czy element jest widżetem
-            if (QWidget *widget = item->widget()) {
-                // Jeśli jest widżetem, usuń go
-                widget->deleteLater();
-            }
-            // Usuń element z układu
-            delete item;
-        }
-        delete lettersGridLayout;
+    if(lettersGridLayout == nullptr){
+        lettersGridLayout = new QGridLayout(ui->lettersFrame);
     }
 
-    lettersGridLayout = new QGridLayout(ui->lettersFrame);
+    // Usunięcie przycisków z lettersGridLayout i zwolnienie pamięci
+    for (int i = 0; i < lettersGridLayout->count(); ++i) {
+        QLayoutItem *item = lettersGridLayout->takeAt(i);
+        if (QWidget *widget = item->widget()) {
+            widget->deleteLater(); // Usuń przycisk i zwolnij pamięć
+        }
+        delete item; // Usuń element z układu
+    }
+
+    // Usunięcie wskaźników z letButtons i zwolnienie pamięci
+    for (QPushButton *button : letButtons) {
+        delete button; // Zwolnij pamięć
+    }
+    letButtons.clear(); // Wyczyść wektor
 
     int letterIndex = 0;
     for (int i = 0; i < frameMult; i++){

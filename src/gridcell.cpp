@@ -48,7 +48,6 @@ void GridCell::setLetterVisibility()
 
 GridCell::~GridCell()
 {
-    qDebug() << "deleting gridcell...";
     delete label;
     delete layout;
 }
