@@ -27,6 +27,7 @@ private:
     int screenWidth = 1920, screenHeight = 1080;
     QString projectPath;
     Board board;
+    bool isFirstBoard;
     user player;
     double gridCellSize = 0;
     QGridLayout* gridLayout = nullptr, *lettersGridLayout = nullptr;
