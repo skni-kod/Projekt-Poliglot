@@ -39,5 +39,6 @@ private:
     void setupButtons();
     void updateGrid(QString &newWord);
     void startNewBoard(int diff);
+    void setupCheckButton();
 };
 #endif // MAINWINDOW_H
