@@ -109,34 +109,30 @@ void MainWindow::prepareGrid(int diff){
     }
 
     if(gridLayout != nullptr){
+
         QLayoutItem *item;
+
         while ((item = gridLayout->takeAt(0)) != nullptr) {
-            // Sprawdzanie, czy element jest widżetem
+
             if (QWidget *widget = item->widget()) {
-                // Jeśli jest widżetem, usuń go
                 widget->deleteLater();
             }
-            // Usuń element z układu
             delete item;
         }
     }
 
     if (!gridLayout)
         gridLayout = new QGridLayout(ui->gridFrame);
-    //gridLayout = new QGridLayout(ui->gridFrame);
 
-    if(isFirstBoard){
-        for (int i = 0; i < (int)s.size(); i++){
-            for(int j = 0; j < (int)s[0].size() ; j++){
-                if(s[i][j] != '#'){
-                    qDebug()<<"Adding new gridCell " << s[i][j];
-                    GridCell *cell = new GridCell(s[i][j].toUpper(), false, gridCellSize);
-                    gridLayout->addWidget(cell, i, j, Qt::AlignCenter);
-                }
+    for (int i = 0; i < (int)s.size(); i++){
+        for(int j = 0; j < (int)s[0].size() ; j++){
+            if(s[i][j] != '#'){
+                qDebug()<<"Adding new gridCell " << s[i][j];
+                GridCell *cell = new GridCell(s[i][j].toUpper(), false, gridCellSize);
+                gridLayout->addWidget(cell, i, j, Qt::AlignCenter);
             }
         }
     }
-
 
     ui->textBrowser->clear();
 
@@ -169,69 +165,23 @@ void MainWindow::prepareLetterButtons(){
     }
 
     //set clear button behaviour
-    connect(ui->clearButton, &QPushButton::clicked, this, [this](){
-        ui->textEdit->clear();
-        for(auto& button : letButtons){
-            button->show();
-        }
-    });
+    if(isFirstBoard){
+        connect(ui->clearButton, &QPushButton::clicked, this, [this](){
+            ui->textEdit->clear();
+            for(auto& button : letButtons){
+                button->show();
+            }
+        });
+    }
 
     //set shorcut for clearing textEdit field as a backspace key
     QShortcut *backspaceShortcut = new QShortcut(QKeySequence(Qt::Key_Backspace), ui->clearButton);
     QObject::connect(backspaceShortcut, &QShortcut::activated, ui->clearButton, &QPushButton::click);
 
     //set check word button behaviour, sends word to be checked by a board
-    connect(ui->checkButton, &QPushButton::clicked, this, [this](){
-        QString wordToCheck = ui->textEdit->toPlainText().toLower();
-        int result = board.checkWord(wordToCheck);
-
-        if(result == 1){
-
-            //there is this word on a board
-            qDebug() << "word is present: " << wordToCheck;
-            updateGrid(wordToCheck);
-
-            if(board.AlreadyGuessedWords().find(wordToCheck) == board.AlreadyGuessedWords().end()){
-                player.updatePoints('I', wordToCheck.length()*2);
-                board.addGuessedWordCount();
-            }
-
-            board.addGuessedWord(wordToCheck);
-            ui->pointsLabel->setText((QString)"Punkty: " + QString::number(player.getPoints()));
-            player.saveUserData(userDataPath);
-
-            //if board completed
-            if(board.getGuessedWordCount() == (int)board.PresentWords().size()){
-                QTimer::singleShot(3000, [this](){
-                    startNewBoard(difficulty);
-                    isFirstBoard = false;
-                });
-            }
-        }
-        else if(result == 2){
-
-            //there is word like that but not on a board
-            qDebug() << "word exists: " << wordToCheck;
-
-            if(board.AlreadyGuessedWords().find(wordToCheck) == board.AlreadyGuessedWords().end()){
-                player.updatePoints('I', wordToCheck.length()*3);
-            }
-
-            board.addGuessedWord(wordToCheck);
-            ui->pointsLabel->setText((QString)"Punkty: " + QString::number(player.getPoints()));
-            player.saveUserData(userDataPath);
-        }
-        else{
-            //there is no word like that, ignore
-            qDebug() << "word does not exist: " << wordToCheck;
-        }
-
-        qDebug() << "Points: " << player.getPoints();
-        ui->textEdit->clear();
-        for(auto& button : letButtons){
-            button->show();
-        }
-    });
+    if(isFirstBoard){
+        setupCheckButton();
+    }
 
     QShortcut *enterShortcut = new QShortcut(QKeySequence(Qt::Key_Enter), ui->checkButton);
     connect(enterShortcut, &QShortcut::activated, ui->checkButton, &QPushButton::click);
@@ -241,20 +191,20 @@ void MainWindow::prepareLetterButtons(){
         lettersGridLayout = new QGridLayout(ui->lettersFrame);
     }
 
-    // Usunięcie przycisków z lettersGridLayout i zwolnienie pamięci
+    // deleting buttons from lettersGridLayout
     for (int i = 0; i < lettersGridLayout->count(); ++i) {
         QLayoutItem *item = lettersGridLayout->takeAt(i);
         if (QWidget *widget = item->widget()) {
-            widget->deleteLater(); // Usuń przycisk i zwolnij pamięć
+            widget->deleteLater();
         }
-        delete item; // Usuń element z układu
+        delete item;
     }
 
-    // Usunięcie wskaźników z letButtons i zwolnienie pamięci
+    // deleting pointers from nonexisting buttons that have been just deleted
     for (QPushButton *button : letButtons) {
-        delete button; // Zwolnij pamięć
+        delete button;
     }
-    letButtons.clear(); // Wyczyść wektor
+    letButtons.clear();
 
     int letterIndex = 0;
     for (int i = 0; i < frameMult; i++){
@@ -262,7 +212,6 @@ void MainWindow::prepareLetterButtons(){
             QChar character = let[letterIndex].toUpper();
             QPushButton *button = new QPushButton(character);
             letButtons.push_back(button);
-
 
             button->setStyleSheet(
                       "QPushButton {"
@@ -301,6 +250,63 @@ void MainWindow::prepareLetterButtons(){
             }
         }
     }
+}
+
+void MainWindow::setupCheckButton(){
+    connect(ui->checkButton, &QPushButton::clicked, this, [this](){
+        QString wordToCheck = ui->textEdit->toPlainText().toLower();
+        int result = board.checkWord(wordToCheck);
+
+        if(result == 1){
+
+            //there is this word on a board
+            qDebug() << "word is present: " << wordToCheck;
+            updateGrid(wordToCheck);
+
+            if(board.AlreadyGuessedWords().find(wordToCheck) == board.AlreadyGuessedWords().end()){
+                player.updatePoints('I', wordToCheck.length()*2);
+                board.addGuessedWordCount();
+            }
+
+            board.addGuessedWord(wordToCheck);
+            ui->pointsLabel->setText((QString)"Punkty: " + QString::number(player.getPoints()));
+            player.saveUserData(userDataPath);
+
+            //if board completed
+            qDebug() << "guessed word count: " << board.getGuessedWordCount()
+                     << "presentwords.size()" << (int)board.PresentWords().size();
+            if(board.getGuessedWordCount() == (int)board.PresentWords().size() &&
+                board.getGuessedWordCount() > 0){
+                QTimer::singleShot(3000, [this](){
+                    isFirstBoard = false;
+                    startNewBoard(difficulty);
+                });
+            }
+        }
+        else if(result == 2){
+
+            //there is word like that but not on a board
+            qDebug() << "word exists: " << wordToCheck;
+
+            if(board.AlreadyGuessedWords().find(wordToCheck) == board.AlreadyGuessedWords().end()){
+                player.updatePoints('I', wordToCheck.length()*3);
+            }
+
+            board.addGuessedWord(wordToCheck);
+            ui->pointsLabel->setText((QString)"Punkty: " + QString::number(player.getPoints()));
+            player.saveUserData(userDataPath);
+        }
+        else{
+            //there is no word like that, ignore
+            qDebug() << "word does not exist: " << wordToCheck;
+        }
+
+        qDebug() << "Points: " << player.getPoints();
+        ui->textEdit->clear();
+        for(auto& button : letButtons){
+            button->show();
+        }
+    });
 }
 
 void MainWindow::startNewBoard(int diff){
@@ -393,6 +399,7 @@ void MainWindow::setupButtons()
         ui->verticalWidget_2->resize(width,height);
     });
 
+    // OPTIONS BUTTON
     connect(ui->optionsButton, &QPushButton::clicked, this, [this](){
         ui->menu->hide();
         ui->menuOptions->show();
@@ -400,6 +407,7 @@ void MainWindow::setupButtons()
         ui->verticalWidget_3->resize(width, height);
     });
 
+    // CLOSING THE GAME "X" BUTTON
     connect(ui->gameCloseButton, &QPushButton::clicked, this, [](){
         QMessageBox msgBox;
         msgBox.setIcon(QMessageBox::Question);
@@ -490,6 +498,7 @@ void MainWindow::setupButtons()
     });
 }
 
+// used to put guessed words onto the board
 void MainWindow::updateGrid(QString& newWord)
 {
     std::unordered_map<QString, std::vector<std::pair<int, int>>> map = board.WordMap();

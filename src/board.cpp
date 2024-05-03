@@ -41,6 +41,10 @@ Board::Board(QObject *parent, std::vector<QString> wordsList, QVector<QChar> let
     : QObject{parent}
 {
     letters = letterSet;
+    usedWordsCount = 0;
+    guessedWordsCount = 0;
+    alreadyGuessedWords.clear();
+    presentWords.clear();
 
     if(wordsList.size() < 3)
         return;
@@ -384,6 +388,8 @@ void Board::operator=(const Board &obj)
         allCoords = obj.allCoords;
         tips = obj.tips;
         scheme = obj.scheme;
+        guessedWordsCount = obj.guessedWordsCount;
+        alreadyGuessedWords = obj.alreadyGuessedWords;
     }
 }
 
