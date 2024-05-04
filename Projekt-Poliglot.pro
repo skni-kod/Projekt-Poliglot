@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     src/board.cpp \
+    src/completiondialog.cpp \
     src/gridcell.cpp \
     src/main.cpp \
     src/mainwindow.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
 
 HEADERS += \
     src/board.h \
+    src/completiondialog.h \
     src/gridcell.h \
     src/mainwindow.h \
     src/user.h \

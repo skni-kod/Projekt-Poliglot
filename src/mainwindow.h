@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QElapsedTimer>
 #include "board.h"
 #include "qgridlayout.h"
 #include "qpushbutton.h"
@@ -20,7 +21,6 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
 private:
     Ui::MainWindow *ui;
     int width = 1920, height = 1080;
@@ -40,5 +40,6 @@ private:
     void updateGrid(QString &newWord);
     void startNewBoard(int diff);
     void setupCheckButton();
+    QElapsedTimer elapsedTime;
 };
 #endif // MAINWINDOW_H
