@@ -13,13 +13,15 @@
 #include "word_gen.h"
 #include "gridcell.h"
 #include "user.h"
-
+#include "completiondialog.h"
 //<a target="_blank" href="https://icons8.com/icon/KLD9V6A735yg/done">Check</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    elapsedTime.start();
+    qDebug() << "Elapsed time: " << elapsedTime.elapsed() << "milliseconds";
     QScreen *screen = QApplication::primaryScreen();
 
     isFirstBoard = true;
@@ -277,9 +279,21 @@ void MainWindow::setupCheckButton(){
                      << "presentwords.size()" << (int)board.PresentWords().size();
             if(board.getGuessedWordCount() == (int)board.PresentWords().size() &&
                 board.getGuessedWordCount() > 0){
-                QTimer::singleShot(3000, [this](){
+                //                QTimer::singleShot(3000, [this](){
+                //                    isFirstBoard = false;
+                //                    startNewBoard(difficulty);
+                //                });
+                int elapsedTimeInSeconds = elapsedTime.elapsed() / 1000;
+
+                CompletionDialog *completionDialog = new CompletionDialog(this);
+                completionDialog->setElapsedTime(elapsedTimeInSeconds);
+                completionDialog->show();
+
+                QTimer::singleShot(10000, [completionDialog, this](){
+                    completionDialog->deleteLater();
                     isFirstBoard = false;
                     startNewBoard(difficulty);
+
                 });
             }
         }
@@ -514,7 +528,6 @@ void MainWindow::updateGrid(QString& newWord)
         }
     }
 }
-
 MainWindow::~MainWindow()
 {
     delete ui;
