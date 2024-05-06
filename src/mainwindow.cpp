@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    elapsedTime.start();
+
     qDebug() << "Elapsed time: " << elapsedTime.elapsed() << "milliseconds";
     QScreen *screen = QApplication::primaryScreen();
 
@@ -152,6 +152,8 @@ void MainWindow::prepareGrid(int diff){
     ui->textBrowser->show();
 
     ui->pointsLabel->setText((QString)"Punkty: " + QString::number(player.getPoints()));
+
+    elapsedTime.start();
 }
 
 void MainWindow::prepareLetterButtons(){
@@ -277,8 +279,7 @@ void MainWindow::setupCheckButton(){
             //if board completed
             qDebug() << "guessed word count: " << board.getGuessedWordCount()
                      << "presentwords.size()" << (int)board.PresentWords().size();
-            if(board.getGuessedWordCount() == (int)board.PresentWords().size() &&
-                board.getGuessedWordCount() > 0){
+            if(board.getGuessedWordCount() == (int)board.PresentWords().size()){
                 //                QTimer::singleShot(3000, [this](){
                 //                    isFirstBoard = false;
                 //                    startNewBoard(difficulty);
@@ -292,6 +293,7 @@ void MainWindow::setupCheckButton(){
                 QTimer::singleShot(10000, [completionDialog, this](){
                     completionDialog->deleteLater();
                     isFirstBoard = false;
+                    elapsedTime.restart();
                     startNewBoard(difficulty);
 
                 });
