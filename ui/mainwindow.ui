@@ -28,8 +28,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>1</width>
-      <height>1</height>
+      <width>1920</width>
+      <height>1080</height>
      </rect>
     </property>
     <widget class="QWidget" name="verticalLayoutWidget">
@@ -38,7 +38,7 @@
        <x>-1</x>
        <y>19</y>
        <width>1891</width>
-       <height>951</height>
+       <height>1018</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,1,1,1,0">
@@ -155,9 +155,9 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>160</y>
+             <y>240</y>
              <width>519</width>
-             <height>151</height>
+             <height>100</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -186,9 +186,9 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>320</y>
+             <y>350</y>
              <width>519</width>
-             <height>151</height>
+             <height>100</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -217,9 +217,9 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>0</y>
+             <y>120</y>
              <width>521</width>
-             <height>151</height>
+             <height>100</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -245,6 +245,43 @@
            </property>
            <property name="text">
             <string>Zagraj</string>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="continueButton">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>10</y>
+             <width>521</width>
+             <height>100</height>
+            </rect>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>122344</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Book Antiqua</family>
+             <pointsize>40</pointsize>
+            </font>
+           </property>
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="text">
+            <string>Kontynuuj</string>
            </property>
           </widget>
          </widget>
@@ -343,8 +380,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>1920</width>
-      <height>1080</height>
+      <width>1</width>
+      <height>1</height>
      </rect>
     </property>
     <widget class="QWidget" name="horizontalLayoutWidget_7">
