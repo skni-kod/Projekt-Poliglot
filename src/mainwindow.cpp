@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->game->hide();
     ui->menuOptions->hide();
     ui->difficultySelection->hide();
-
+    ui->continueButton->setDisabled(true);
     //set project path
     projectPath = QDir::currentPath();
 
@@ -338,10 +338,11 @@ void MainWindow::startNewBoard(int diff){
 void MainWindow::setupButtons()
 {
     //set style for main menu buttons
-    QString buttonPreset = "QPushButton {border: 10px; border-radius: 60px; background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #253624, stop: 1 #679465);}";
+    QString buttonPreset = "QPushButton {border: 10px; border-radius:49px; background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #253624, stop: 1 #679465);}";
     ui->playButton->setStyleSheet(buttonPreset);
     ui->optionsButton->setStyleSheet(buttonPreset);
     ui->closeButton->setStyleSheet(buttonPreset);
+    ui->continueButton->setStyleSheet(buttonPreset);
 
     //set paths for used icons and images
     QString kodPath = "://sprites/skni_kod_logo_white.png";
@@ -433,6 +434,13 @@ void MainWindow::setupButtons()
     connect(ui->backMenuButton, &QPushButton::clicked, this, [this](){
         ui->game->hide();
         ui->menu->show();
+        ui->menu->resize(width, height);
+        ui->verticalLayoutWidget->resize(width, height);
+        ui->continueButton->setDisabled(false);
+    });
+    connect(ui->continueButton, &QPushButton::clicked, this, [this](){
+        ui->menu->hide();
+        ui->game->show();
         ui->menu->resize(width, height);
         ui->verticalLayoutWidget->resize(width, height);
     });
