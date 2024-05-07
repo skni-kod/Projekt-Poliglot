@@ -351,6 +351,7 @@ void MainWindow::setupButtons()
     QString backspaceIconPath = ":/sprites/icons/icon-backspace.png";
     QString backIconPath = ":/sprites/icons/icon-back-white.png";
     QString poliglotIconPath = ":/sprites/icons/poliglot-icon.png";
+    QString backSmallIconPath = ":/sprites/icons/icon-back-white-small.png";
 
     QPixmap kodLogo(kodPath);
     QPixmap logo(logoPath);
@@ -359,6 +360,7 @@ void MainWindow::setupButtons()
     QPixmap backspaceIconMap(backspaceIconPath);
     QPixmap backIconMap(backIconPath);
     QPixmap poliglotIconMap(poliglotIconPath);
+    QPixmap backSmallIconMap(backSmallIconPath);
 
     QIcon poliglotIcon(poliglotIconMap);
     this->setWindowIcon(poliglotIcon);
@@ -407,6 +409,11 @@ void MainWindow::setupButtons()
     ui->difficultyBackButton->setIconSize(backIconMap.rect().size());
     ui->difficultyBackButton->setStyleSheet(buttonPreset1);
 
+    QIcon backSmallIcon(backSmallIconMap);
+    ui->backMenuButton->setIcon(backSmallIcon);
+    ui->backMenuButton->setIconSize(backSmallIconMap.rect().size());
+    ui->backMenuButton->setStyleSheet(buttonPreset1);
+
     //define main menu play button behaviour
     connect(ui->playButton, &QPushButton::clicked, this, [this](){
         ui->menu->hide();
@@ -422,7 +429,13 @@ void MainWindow::setupButtons()
         ui->menuOptions->resize(width, height);
         ui->verticalWidget_3->resize(width, height);
     });
-
+    // RETURN BUTON IN GAME
+    connect(ui->backMenuButton, &QPushButton::clicked, this, [this](){
+        ui->game->hide();
+        ui->menu->show();
+        ui->menu->resize(width, height);
+        ui->verticalLayoutWidget->resize(width, height);
+    });
     // CLOSING THE GAME "X" BUTTON
     connect(ui->gameCloseButton, &QPushButton::clicked, this, [](){
         QMessageBox msgBox;
@@ -512,6 +525,18 @@ void MainWindow::setupButtons()
             ui->verticalWidget_3->resize(width, height);
         }
     });
+    //Points Button
+    ui->checkBox_3->setChecked(false);
+    connect(ui->okButton, &QPushButton::clicked,this,[this](){
+        if(ui->checkBox_3->isChecked()){
+            player.setPoints(0);
+            qDebug()<<"Points = 0";
+        }
+        else {
+            qDebug()<<"Sth went wrong";
+        }
+    });
+
 }
 
 // used to put guessed words onto the board
