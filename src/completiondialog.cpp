@@ -30,6 +30,11 @@ CompletionDialog::CompletionDialog(QWidget *parent) : QFrame(parent) {
     buttonLayout->addStretch();
     buttonLayout->addWidget(buttonNext,0,Qt::AlignBottom | Qt::AlignRight);
     layout->addLayout(buttonLayout);
+
+    connect(buttonBack, &QPushButton::clicked, this, [this](){
+        this->hide();
+        //mainWindow->showMenu();
+    });
 }
 
 void CompletionDialog::setElapsedTime(int seconds) {
