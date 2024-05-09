@@ -8,6 +8,7 @@
 #include <QDir>
 #include <QGraphicsPixmapItem>
 #include <QMessageBox>
+#include <QStandardPaths>
 #include <QTimer>
 #include <QShortcut>
 #include "word_gen.h"
@@ -54,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //userDataPath = projectPath + "user_data/user_stats.txt";
 
-    userDataPath = ":/user_data/user_stats.txt";
+    userDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/user_stats.txt";
     setupButtons();
 
     ui->verticalLayoutWidget->resize(width, height);
@@ -260,7 +261,7 @@ void MainWindow::setupCheckButton(){
     connect(ui->checkButton, &QPushButton::clicked, this, [this](){
         QString wordToCheck = ui->textEdit->toPlainText().toLower();
         int result = board.checkWord(wordToCheck);
-
+        int level = player.getLevel();
         if(result == 1){
 
             //there is this word on a board
@@ -287,7 +288,7 @@ void MainWindow::setupCheckButton(){
                 int elapsedTimeInSeconds = elapsedTime.elapsed() / 1000;
 
                 CompletionDialog *completionDialog = new CompletionDialog(this);
-                completionDialog->setElapsedTime(elapsedTimeInSeconds);
+                completionDialog->setElapsedTime(elapsedTimeInSeconds, level);
                 completionDialog->show();
 
                 QTimer::singleShot(10000, [completionDialog, this](){

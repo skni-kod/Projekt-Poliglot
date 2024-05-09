@@ -8,7 +8,7 @@ class CompletionDialog : public QFrame {
     Q_OBJECT
 public:
     CompletionDialog(QWidget *parent);
-    void setElapsedTime(int seconds);
+    void setElapsedTime(int seconds, int lvl);
 private:
     QLabel *elapsedTimeLabel;
 };

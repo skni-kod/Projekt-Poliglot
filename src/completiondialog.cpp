@@ -37,6 +37,9 @@ CompletionDialog::CompletionDialog(QWidget *parent) : QFrame(parent) {
     });
 }
 
-void CompletionDialog::setElapsedTime(int seconds) {
-    elapsedTimeLabel->setText(QString("Czas pokoniania levelu: %1 sekund").arg(seconds));
+void CompletionDialog::setElapsedTime(int seconds, int lvl) {
+    int lvlpone = lvl+1;
+    elapsedTimeLabel->setText(QString("Czas pokoniania levelu: %1 sekund\n"
+                                      "Level %2 → Level %3").arg(seconds).arg(lvl).arg(lvlpone));
+
 }
