@@ -39,7 +39,7 @@ void GridCell::setLetterVisibility()
     frameSheet += "px;}";
     setStyleSheet(frameSheet);
     QTimer::singleShot(1000, [this](){
-        QString frameSheet = "QFrame {background-color: rgb(107, 150, 122) ; border-radius: ";
+        QString frameSheet = "QFrame {background-color: rgb(87, 130, 102) ; border-radius: ";
         frameSheet += QString::number(width()/4);
         frameSheet += "px;}";
         setStyleSheet(frameSheet);

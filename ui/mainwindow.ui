@@ -155,7 +155,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>240</y>
+             <y>250</y>
              <width>519</width>
              <height>100</height>
             </rect>
@@ -186,7 +186,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>350</y>
+             <y>360</y>
              <width>519</width>
              <height>100</height>
             </rect>
@@ -217,7 +217,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>120</y>
+             <y>140</y>
              <width>521</width>
              <height>100</height>
             </rect>
@@ -254,7 +254,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>10</y>
+             <y>30</y>
              <width>521</width>
              <height>100</height>
             </rect>
@@ -482,8 +482,15 @@
               <height>99999</height>
              </size>
             </property>
+            <property name="font">
+             <font>
+              <family>Book Antiqua</family>
+              <pointsize>30</pointsize>
+             </font>
+            </property>
             <property name="text">
-             <string>Punkty: 0 </string>
+             <string>Punkty: 0 
+Level: 0 </string>
             </property>
             <property name="alignment">
              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -1225,7 +1232,7 @@
      <x>0</x>
      <y>0</y>
      <width>1920</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

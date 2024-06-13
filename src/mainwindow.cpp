@@ -53,16 +53,18 @@ MainWindow::MainWindow(QWidget *parent)
     std::reverse(projectPath.begin(), projectPath.end());
     projectPath += "Projekt-Poliglot/";
 
-    //userDataPath = projectPath + "user_data/user_stats.txt";
+    userDataPath = projectPath + "user_data/user_stats.txt";
 
     userDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/user_stats.txt";
     setupButtons();
 
     ui->verticalLayoutWidget->resize(width, height);
 
+    userDataPath = projectPath + "user_data/user_stats.txt";
     //USER STATS MANIPULATIONS
     player.loadUserData(userDataPath);
     player.saveUserData(userDataPath);
+
 }
 
 void MainWindow::prepareGrid(int diff){
@@ -150,9 +152,9 @@ void MainWindow::prepareGrid(int diff){
         }
         ui->textBrowser->append(temp);
     }
-    ui->textBrowser->show();
+    ui->textBrowser->hide();
 
-    ui->pointsLabel->setText((QString)"Punkty: " + QString::number(player.getPoints()));
+    updateCornerLabel();
 
     elapsedTime.start();
 }
@@ -225,7 +227,7 @@ void MainWindow::prepareLetterButtons(){
                           "background-color: #263023;"
                           "min-width: 60px;"
                           "min-height: 60px;"
-                          "font: 35px;"
+                          "font: 45px;"
                           "font-family: Book Antiqua;"
                       "}"
                       ""
@@ -274,29 +276,31 @@ void MainWindow::setupCheckButton(){
             }
 
             board.addGuessedWord(wordToCheck);
-            ui->pointsLabel->setText((QString)"Punkty: " + QString::number(player.getPoints()));
-            player.saveUserData(userDataPath);
 
             //if board completed
             qDebug() << "guessed word count: " << board.getGuessedWordCount()
                      << "presentwords.size()" << (int)board.PresentWords().size();
             if(board.getGuessedWordCount() == (int)board.PresentWords().size()){
-                //                QTimer::singleShot(3000, [this](){
-                //                    isFirstBoard = false;
-                //                    startNewBoard(difficulty);
-                //                });
+
                 int elapsedTimeInSeconds = elapsedTime.elapsed() / 1000;
 
+                player.setLevel(player.getLevel()+1);
+                updateCornerLabel();
+                player.saveUserData(userDataPath);
+
+                QEventLoop loop;
+                QTimer::singleShot(1000, &loop, &QEventLoop::quit);
+                loop.exec();
+
                 CompletionDialog *completionDialog = new CompletionDialog(this);
-                completionDialog->setElapsedTime(elapsedTimeInSeconds, level);
+                completionDialog->setElapsedTime(elapsedTimeInSeconds, level, board.getGuessedWordCount());
                 completionDialog->show();
 
-                QTimer::singleShot(10000, [completionDialog, this](){
+                connect(completionDialog, &CompletionDialog::nextClicked, this, [completionDialog, this](){
                     completionDialog->deleteLater();
                     isFirstBoard = false;
                     elapsedTime.restart();
                     startNewBoard(difficulty);
-
                 });
             }
         }
@@ -310,14 +314,15 @@ void MainWindow::setupCheckButton(){
             }
 
             board.addGuessedWord(wordToCheck);
-            ui->pointsLabel->setText((QString)"Punkty: " + QString::number(player.getPoints()));
+
             player.saveUserData(userDataPath);
         }
         else{
             //there is no word like that, ignore
             qDebug() << "word does not exist: " << wordToCheck;
         }
-
+        updateCornerLabel();
+        player.saveUserData(userDataPath);
         qDebug() << "Points: " << player.getPoints();
         ui->textEdit->clear();
         for(auto& button : letButtons){
@@ -339,7 +344,9 @@ void MainWindow::startNewBoard(int diff){
 void MainWindow::setupButtons()
 {
     //set style for main menu buttons
-    QString buttonPreset = "QPushButton {border: 10px; border-radius:49px; background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #253624, stop: 1 #679465);}";
+    QString buttonPreset = "QPushButton {border: 10px; "
+                           "border-radius:49px; "
+                           "background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #253624, stop: 1 #679465);}";
     ui->playButton->setStyleSheet(buttonPreset);
     ui->optionsButton->setStyleSheet(buttonPreset);
     ui->closeButton->setStyleSheet(buttonPreset);
@@ -490,8 +497,11 @@ void MainWindow::setupButtons()
     QString diffButtonPreset = "QPushButton {border: 10px; border-radius: 40px; background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #253624, stop: 1 #679465);}";
 
     ui->easyButton->setStyleSheet(diffButtonPreset);
+    ui->easyButton->setCursor(Qt::PointingHandCursor);
     ui->mediumButton->setStyleSheet(diffButtonPreset);
+    ui->mediumButton->setCursor(Qt::PointingHandCursor);
     ui->hardButton->setStyleSheet(diffButtonPreset);
+    ui->hardButton->setCursor(Qt::PointingHandCursor);
 
     //EASY INIT
     connect(ui->easyButton, &QPushButton::clicked, this, [this](){
@@ -546,6 +556,25 @@ void MainWindow::setupButtons()
         }
     });
 
+    ui->gridFrame->setObjectName("gridFrame");
+    ui->gridFrame->setStyleSheet("#gridFrame {background-color: #2e382b; "
+                                 "border: 10px solid #3a4736;"
+                                 "border-radius: 30px;}");
+
+    ui->lettersFrame->setObjectName("lettersFrame");
+    ui->lettersFrame->setStyleSheet("#lettersFrame {background-color: #2e382b; "
+                                    "border: 10px solid #3a4736;"
+                                    "border-radius: 30px;}");
+
+    ui->textEdit->setStyleSheet("QTextEdit {background-color: #2e382b; "
+                                "border: 10px solid #3a4736;"
+                                "border-radius: 30px;}");
+
+}
+
+void MainWindow::updateCornerLabel(){
+    ui->pointsLabel->setText((QString)"Punkty: " + QString::number(player.getPoints()) + "\n" +
+                             "Level: " + QString::number(player.getLevel()));
 }
 
 // used to put guessed words onto the board

@@ -41,5 +41,6 @@ private:
     void startNewBoard(int diff);
     void setupCheckButton();
     QElapsedTimer elapsedTime;
+    void updateCornerLabel();
 };
 #endif // MAINWINDOW_H
