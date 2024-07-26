@@ -12,5 +12,6 @@
         <file>sprites/logo.png</file>
         <file>sprites/icons/poliglot-icon.png</file>
         <file>sprites/icons/icon-back-white-small.png</file>
+        <file>sprites/icons/icon-light-bulb.png</file>
     </qresource>
 </RCC>

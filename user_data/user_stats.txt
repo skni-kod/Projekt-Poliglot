@@ -1,2 +1,2 @@
-Level=73
-Points=2572
+Level=84
+Points=999999

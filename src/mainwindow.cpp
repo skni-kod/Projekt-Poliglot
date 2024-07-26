@@ -152,7 +152,7 @@ void MainWindow::prepareGrid(int diff){
         }
         ui->textBrowser->append(temp);
     }
-    ui->textBrowser->hide();
+    ui->textBrowser->show();
 
     updateCornerLabel();
 
@@ -361,6 +361,7 @@ void MainWindow::setupButtons()
     QString backIconPath = ":/sprites/icons/icon-back-white.png";
     QString poliglotIconPath = ":/sprites/icons/poliglot-icon.png";
     QString backSmallIconPath = ":/sprites/icons/icon-back-white-small.png";
+    QString lightBulbIconPath = ":/sprites/icons/icon-light-bulb.png";
 
     QPixmap kodLogo(kodPath);
     QPixmap logo(logoPath);
@@ -370,6 +371,7 @@ void MainWindow::setupButtons()
     QPixmap backIconMap(backIconPath);
     QPixmap poliglotIconMap(poliglotIconPath);
     QPixmap backSmallIconMap(backSmallIconPath);
+    QPixmap lightBulbIconMap(lightBulbIconPath);
 
     QIcon poliglotIcon(poliglotIconMap);
     this->setWindowIcon(poliglotIcon);
@@ -422,6 +424,11 @@ void MainWindow::setupButtons()
     ui->backMenuButton->setIcon(backSmallIcon);
     ui->backMenuButton->setIconSize(backSmallIconMap.rect().size());
     ui->backMenuButton->setStyleSheet(buttonPreset1);
+
+    QIcon lightBulbIcon(lightBulbIconMap);
+    ui->revealLetterButton->setIcon(lightBulbIcon);
+    ui->revealLetterButton->setIconSize(lightBulbIconMap.rect().size());
+    ui->revealLetterButton->setStyleSheet(buttonPreset1);
 
     //define main menu play button behaviour
     connect(ui->playButton, &QPushButton::clicked, this, [this](){
@@ -581,16 +588,22 @@ void MainWindow::updateCornerLabel(){
 void MainWindow::updateGrid(QString& newWord)
 {
     std::unordered_map<QString, std::vector<std::pair<int, int>>> map = board.WordMap();
+    auto signMap = board.signMap;
+
+    int i = 0;
 
     for(auto& pair : map[newWord]){
 
         GridCell *gridCell = dynamic_cast<GridCell*>(gridLayout->itemAtPosition(pair.second, pair.first)->widget());
         if(gridCell){
             gridCell->setLetterVisibility();
+            board.revealedSignMap[newWord[i]].push_back(pair);
+            board.removeFromSignMap(newWord[i], pair.first, pair.second);
         }
         else{
             qDebug()<<"Unable to reach gridcell!";
         }
+        i++;
     }
 }
 MainWindow::~MainWindow()
@@ -598,3 +611,66 @@ MainWindow::~MainWindow()
     delete ui;
     delete gridLayout;
 }
+
+void MainWindow::on_revealLetterButton_clicked()
+{
+    if (player.getPoints() < 200){
+        QMessageBox *msgbox = new QMessageBox();
+        msgbox->setText("Nie posiadasz wystarczającej ilości punktów!");
+        msgbox->setStandardButtons(QMessageBox::Ok);
+        msgbox->exec();
+        return;
+    }
+
+    bool ok = false;
+    auto letters = board.Letters();
+    auto revealedLetters = board.revealedSignMap;
+    int i = 0;
+    qDebug() << letters;
+
+    while(!ok && i < 300){
+        i++;
+        QChar pickedLetter = letters[rand() % ((int)letters.length())];
+
+        int index = 0;
+        switch(board.signMap[pickedLetter].size()){
+            case 1:
+                qDebug() << "Nie ma litery";
+                continue;
+            case 2:
+                break;
+            default:
+                index = rand() % ((int)board.signMap[pickedLetter].size()-2);
+                break;
+        }
+
+        std::pair<int, int> coords = board.signMap[pickedLetter][1+index];
+        qDebug()<<"Wybrano litere: " << pickedLetter << " i bedzie na kordach " << coords;
+
+        if (coords != (std::pair<int, int>){-100, -100}){
+
+            GridCell *gridCell = dynamic_cast<GridCell*>(gridLayout->itemAtPosition(coords.second, coords.first)->widget());
+            if(gridCell){
+                gridCell->setLetterVisibility();
+                board.revealedSignMap[pickedLetter].push_back(coords);
+                board.removeFromSignMap(pickedLetter, coords.first, coords.second);
+                ok = true;
+            }
+            else{
+                qDebug()<<"Unable to reach gridcell!";
+            }
+        }
+        else{
+            qDebug()<<"kurde jest juz";
+        }
+    }
+
+    if(i>300){
+        qDebug()<<"nie da sie sr";
+        return;
+    }
+
+    player.updatePoints('D', 200);
+    updateCornerLabel();
+}
+

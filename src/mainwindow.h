@@ -21,6 +21,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+private slots:
+    void on_revealLetterButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     int width = 1920, height = 1080;

@@ -22,13 +22,14 @@ private:
     std::vector<QString> words, presentWords, removedWords;
     std::unordered_set<QString> alreadyGuessedWords;
     std::unordered_map<QString, std::vector<std::pair<int, int>>> wordMap;
-    std::unordered_map<QChar, std::vector<std::pair<int, int>>> signMap;
     QVector<QChar> letters;
     std::vector<std::pair<int, int>> allCoords, tips;
     Scheme scheme;
     QString longestWord();
     void addCoord(QString word, QChar letter, int x, int y);
     bool checkNeighbours(int x, int y, int safeX, int safeY);
+
+
     static bool compareLength(const QString &str1, const QString &str2);
 public:
     explicit Board(QObject *parent = nullptr, std::vector<QString> wordsList = {}, QVector<QChar> letterSet = {});
@@ -46,7 +47,9 @@ public:
     void operator=(const Board& obj);
     void addGuessedWordCount();
     int getGuessedWordCount() const;
-
+    std::unordered_map<QChar, std::vector<std::pair<int, int>>> signMap;
+    std::unordered_map<QChar, std::vector<std::pair<int, int>>> revealedSignMap;
+    void removeFromSignMap(QChar letter, int x, int y);
 signals:
 };
 
