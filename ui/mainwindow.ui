@@ -28,8 +28,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>1920</width>
-      <height>1080</height>
+      <width>1</width>
+      <height>1</height>
      </rect>
     </property>
     <widget class="QWidget" name="verticalLayoutWidget">
@@ -380,8 +380,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>1</width>
-      <height>1</height>
+      <width>1920</width>
+      <height>1080</height>
      </rect>
     </property>
     <widget class="QWidget" name="horizontalLayoutWidget_7">
@@ -565,6 +565,49 @@ Level: 0 </string>
          </spacer>
         </item>
         <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_13">
+          <item>
+           <spacer name="horizontalSpacer_19">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="font">
+             <font>
+              <family>Book Antiqua</family>
+              <pointsize>20</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>200</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="revealLetterButton">
+            <property name="minimumSize">
+             <size>
+              <width>50</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -604,6 +647,19 @@ Level: 0 </string>
              </spacer>
             </item>
            </layout>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_7">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -686,19 +742,6 @@ Level: 0 </string>
              </spacer>
             </item>
            </layout>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_7">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
           </item>
          </layout>
         </item>

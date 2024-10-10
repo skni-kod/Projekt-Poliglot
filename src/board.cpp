@@ -41,6 +41,13 @@ Board::Board(QObject *parent, std::vector<QString> wordsList, QVector<QChar> let
     : QObject{parent}
 {
     letters = letterSet;
+
+    //placeholder inpossible values
+    for(auto letter : letters){
+        revealedSignMap[letter].push_back({-99, -99});
+        signMap[letter].push_back({-100, -100});
+    }
+
     usedWordsCount = 0;
     guessedWordsCount = 0;
     alreadyGuessedWords.clear();
@@ -390,6 +397,7 @@ void Board::operator=(const Board &obj)
         scheme = obj.scheme;
         guessedWordsCount = obj.guessedWordsCount;
         alreadyGuessedWords = obj.alreadyGuessedWords;
+        revealedSignMap = obj.revealedSignMap;
     }
 }
 
@@ -401,5 +409,23 @@ void Board::addGuessedWordCount()
 int Board::getGuessedWordCount() const
 {
     return guessedWordsCount;
+}
+
+void Board::removeFromSignMap(QChar letter, int x, int y)
+{
+    // Znajdź znak w mapie
+    auto it = signMap.find(letter);
+    if (it != signMap.end()) {
+        // Znajdź parę koordynatów w wektorze
+        auto& coords = it->second;
+        auto coordIt = std::find_if(coords.begin(), coords.end(), [x, y](const std::pair<int, int>& p) {
+            return p.first == x && p.second == y;
+        });
+
+        // Jeśli znaleziono parę koordynatów, usuń ją
+        if (coordIt != coords.end()) {
+            coords.erase(coordIt);
+        }
+    }
 }
 
