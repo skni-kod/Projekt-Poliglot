@@ -44,26 +44,16 @@ MainWindow::MainWindow(QWidget *parent)
     ui->menuOptions->hide();
     ui->difficultySelection->hide();
     ui->continueButton->setDisabled(true);
-    //set project path
-    projectPath = QDir::currentPath();
 
-    std::reverse(projectPath.begin(), projectPath.end());
-    int indToRem = projectPath.indexOf("/");
-    projectPath = projectPath.sliced(indToRem);
-    std::reverse(projectPath.begin(), projectPath.end());
-    projectPath += "Projekt-Poliglot/";
+    player.filePathInit();
 
-    userDataPath = projectPath + "user_data/user_stats.txt";
-
-    userDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/user_stats.txt";
     setupButtons();
 
     ui->verticalLayoutWidget->resize(width, height);
 
-    userDataPath = projectPath + "user_data/user_stats.txt";
     //USER STATS MANIPULATIONS
-    player.loadUserData(userDataPath);
-    player.saveUserData(userDataPath);
+    player.loadUserData();
+    player.saveUserData();
 
 }
 
@@ -179,19 +169,17 @@ void MainWindow::prepareLetterButtons(){
                 button->show();
             }
         });
-    }
 
-    //set shorcut for clearing textEdit field as a backspace key
-    QShortcut *backspaceShortcut = new QShortcut(QKeySequence(Qt::Key_Backspace), ui->clearButton);
-    QObject::connect(backspaceShortcut, &QShortcut::activated, ui->clearButton, &QPushButton::click);
+        //set shorcut for clearing textEdit field as a backspace key
+        QShortcut *backspaceShortcut = new QShortcut(QKeySequence(Qt::Key_Backspace), ui->clearButton);
+        QObject::connect(backspaceShortcut, &QShortcut::activated, ui->clearButton, &QPushButton::click);
 
-    //set check word button behaviour, sends word to be checked by a board
-    if(isFirstBoard){
+        //set check word button behaviour, sends word to be checked by a board
         setupCheckButton();
-    }
 
-    QShortcut *enterShortcut = new QShortcut(QKeySequence(Qt::Key_Enter), ui->checkButton);
-    connect(enterShortcut, &QShortcut::activated, ui->checkButton, &QPushButton::click);
+        QShortcut *enterShortcut = new QShortcut(QKeySequence(Qt::Key_Enter), ui->checkButton);
+        connect(enterShortcut, &QShortcut::activated, ui->checkButton, &QPushButton::click);
+    }
 
     //ui->textEdit->resize(ui->textEdit->width(), ui->lettersFrame->height() - 150);
     if(lettersGridLayout == nullptr){
@@ -286,7 +274,7 @@ void MainWindow::setupCheckButton(){
 
                 player.setLevel(player.getLevel()+1);
                 updateCornerLabel();
-                player.saveUserData(userDataPath);
+                player.saveUserData();
 
                 QEventLoop loop;
                 QTimer::singleShot(1000, &loop, &QEventLoop::quit);
@@ -315,14 +303,14 @@ void MainWindow::setupCheckButton(){
 
             board.addGuessedWord(wordToCheck);
 
-            player.saveUserData(userDataPath);
+            player.saveUserData();
         }
         else{
             //there is no word like that, ignore
             qDebug() << "word does not exist: " << wordToCheck;
         }
         updateCornerLabel();
-        player.saveUserData(userDataPath);
+        player.saveUserData();
         qDebug() << "Points: " << player.getPoints();
         ui->textEdit->clear();
         for(auto& button : letButtons){

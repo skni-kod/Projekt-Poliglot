@@ -10,6 +10,7 @@ class user
 private:
     int playerLevel;
     int playerPoints;
+    QString filePath;
 public:
 
     user();
@@ -23,8 +24,10 @@ public:
     void updatePoints(char sig,int value);
     void levelComplete(int score, int remainingTime);
 
-    void loadUserData(const QString& fileName);
-    void saveUserData(const QString& fileName);
+    void loadUserData();
+    void saveUserData();
+
+    void filePathInit();
 };
 
 #endif // USER_H
