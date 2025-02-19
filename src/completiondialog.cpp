@@ -58,6 +58,7 @@ CompletionDialog::CompletionDialog(QWidget *parent) : QFrame(parent) {
     });
 
     connect(buttonNext, &QPushButton::clicked, this, &CompletionDialog::nextClicked);
+    //TODO add pointing cursor
 }
 
 void CompletionDialog::setElapsedTime(int seconds, int lvl, int wordsAmount) {

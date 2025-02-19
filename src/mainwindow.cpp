@@ -11,10 +11,14 @@
 #include <QStandardPaths>
 #include <QTimer>
 #include <QShortcut>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 #include "word_gen.h"
 #include "gridcell.h"
 #include "user.h"
 #include "completiondialog.h"
+#include "customdialog.h"
+
 //<a target="_blank" href="https://icons8.com/icon/KLD9V6A735yg/done">Check</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -55,6 +59,13 @@ MainWindow::MainWindow(QWidget *parent)
     player.loadUserData();
     player.saveUserData();
 
+    imgService = new ImageService(this);
+
+    connect(imgService, &ImageService::imageDownloaded, this, [this](const QPixmap &pixmap) {
+        backgroundImage = pixmap;
+    });
+
+    imgService->downloadImage();
 }
 
 void MainWindow::prepareGrid(int diff){
@@ -147,7 +158,38 @@ void MainWindow::prepareGrid(int diff){
     updateCornerLabel();
 
     elapsedTime.start();
+
+    if(!backgroundImage.isNull())
+        ui->imgLabel->setPixmap(backgroundImage);
+    ui->imgLabel->setGeometry(0,0,1920,1080);
+    imgService->downloadImage();
+
 }
+
+// void MainWindow::downloadImage()
+// {
+//     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+//     connect(manager, &QNetworkAccessManager::finished, this, &MainWindow::replyFinished);
+
+//     manager->get(QNetworkRequest(QUrl("https://picsum.photos/1920/1080?blur=5")));
+// }
+
+// void MainWindow::replyFinished(QNetworkReply *reply)
+// {
+//     if (reply->error() == QNetworkReply::NoError) {
+//         QByteArray imageData = reply->readAll();
+//         QImage img;
+//         img.loadFromData(imageData);
+
+//         if (!img.isNull()) {
+//             QPixmap pixmap = QPixmap::fromImage(img);
+//             ui->imgLabel->setPixmap(pixmap);  // Upewnij się, że imgLabel jest odpowiednio zainicjalizowany
+//         }
+//     } else {
+//         qDebug() << "Error downloading image:" << reply->errorString();
+//     }
+//     reply->deleteLater();
+// }
 
 void MainWindow::prepareLetterButtons(){
 
@@ -320,6 +362,7 @@ void MainWindow::setupCheckButton(){
 }
 
 void MainWindow::startNewBoard(int diff){
+    setStyleSheet("background-color: rgba(46, 56, 43, 0.0)");
     difficulty = diff;
     ui->difficultySelection->hide();
     ui->game->show();
@@ -448,20 +491,14 @@ void MainWindow::setupButtons()
         ui->verticalLayoutWidget->resize(width, height);
     });
     // CLOSING THE GAME "X" BUTTON
-    connect(ui->gameCloseButton, &QPushButton::clicked, this, [](){
-        QMessageBox msgBox;
-        msgBox.setIcon(QMessageBox::Question);
-        msgBox.setText("Zamykanie gry");
-        msgBox.setInformativeText("Czy na pewno chcesz opuścić grę?");
-        QPushButton *yesButton = msgBox.addButton("Tak", QMessageBox::ActionRole);
-        QPushButton *noButton = msgBox.addButton("Nie", QMessageBox::RejectRole);
-
-        msgBox.exec();
-
-        if(msgBox.clickedButton() == yesButton){
+    connect(ui->gameCloseButton, &QPushButton::clicked, this, [this](){
+        CustomDialog *dialog = new CustomDialog(this, "Czy na pewno chcesz wyjść z gry?", false);
+        dialog->show();
+        connect(dialog, &CustomDialog::nextClicked, this, [dialog](){
+            dialog->deleteLater();
             QApplication::exit(0);
-        }
-        else if (msgBox.clickedButton() == noButton){}
+        });
+        return;
     });
 
     connect(ui->closeButton, &QPushButton::clicked, this, [](){
@@ -552,18 +589,24 @@ void MainWindow::setupButtons()
     });
 
     ui->gridFrame->setObjectName("gridFrame");
-    ui->gridFrame->setStyleSheet("#gridFrame {background-color: #2e382b; "
+    ui->gridFrame->setStyleSheet("#gridFrame {background-color: rgba(46, 56, 43, 0.8); "
                                  "border: 10px solid #3a4736;"
                                  "border-radius: 30px;}");
 
     ui->lettersFrame->setObjectName("lettersFrame");
-    ui->lettersFrame->setStyleSheet("#lettersFrame {background-color: #2e382b; "
+    ui->lettersFrame->setStyleSheet("#lettersFrame {background-color: rgba(46, 56, 43, 0.8); "
                                     "border: 10px solid #3a4736;"
                                     "border-radius: 30px;}");
 
-    ui->textEdit->setStyleSheet("QTextEdit {background-color: #2e382b; "
+    ui->textEdit->setStyleSheet("QTextEdit {background-color: rgba(46, 56, 43, 0.8); "
                                 "border: 10px solid #3a4736;"
                                 "border-radius: 30px;}");
+
+    ui->pointsLabel->setStyleSheet(                            "border: 2px ;"
+                                   "border-radius: 15px;"
+                                   "background-color: #263023;");
+    ui->label->setStyleSheet("border-radius: 10px;"
+                             "background-color: rgba(46, 56, 43, 0.8);");
 
 }
 
@@ -603,10 +646,11 @@ MainWindow::~MainWindow()
 void MainWindow::on_revealLetterButton_clicked()
 {
     if (player.getPoints() < 200){
-        QMessageBox *msgbox = new QMessageBox();
-        msgbox->setText("Nie posiadasz wystarczającej ilości punktów!");
-        msgbox->setStandardButtons(QMessageBox::Ok);
-        msgbox->exec();
+        CustomDialog *dialog = new CustomDialog(this, "Nie masz wystarczającej ilości punktów!", true);
+        dialog->show();
+        connect(dialog, &CustomDialog::nextClicked, this, [dialog](){
+            dialog->deleteLater();
+        });
         return;
     }
 
