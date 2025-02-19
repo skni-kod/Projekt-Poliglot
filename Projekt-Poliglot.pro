@@ -1,5 +1,5 @@
 QT       += core gui
-
+QT += network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
@@ -11,7 +11,9 @@ CONFIG += c++17
 SOURCES += \
     src/board.cpp \
     src/completiondialog.cpp \
+    src/customdialog.cpp \
     src/gridcell.cpp \
+    src/imageservice.cpp \
     src/main.cpp \
     src/mainwindow.cpp \
     src/user.cpp \
@@ -20,7 +22,9 @@ SOURCES += \
 HEADERS += \
     src/board.h \
     src/completiondialog.h \
+    src/customdialog.h \
     src/gridcell.h \
+    src/imageservice.h \
     src/mainwindow.h \
     src/user.h \
     src/word_gen.h

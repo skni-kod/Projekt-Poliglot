@@ -3,10 +3,13 @@
 
 #include <QMainWindow>
 #include <QElapsedTimer>
+#include <QNetworkAccessManager>
+#include <QObject>
 #include "board.h"
 #include "qgridlayout.h"
 #include "qpushbutton.h"
 #include "user.h"
+#include "imageservice.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -21,9 +24,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void downloadImage();
 private slots:
     void on_revealLetterButton_clicked();
-
 private:
     Ui::MainWindow *ui;
     int width = 1920, height = 1080;
@@ -45,5 +48,7 @@ private:
     void setupCheckButton();
     QElapsedTimer elapsedTime;
     void updateCornerLabel();
+    ImageService* imgService = nullptr;
+    QPixmap backgroundImage;
 };
 #endif // MAINWINDOW_H
