@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QElapsedTimer>
 #include <QNetworkAccessManager>
+#include <QObject>
 #include "board.h"
 #include "qgridlayout.h"
 #include "qpushbutton.h"
@@ -26,7 +27,6 @@ public:
     void downloadImage();
 private slots:
     void on_revealLetterButton_clicked();
-    void replyFinished(QNetworkReply *reply);
 private:
     Ui::MainWindow *ui;
     int width = 1920, height = 1080;

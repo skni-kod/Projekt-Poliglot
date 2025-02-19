@@ -17,7 +17,7 @@ public:
     ImageService(QObject *parent);
     QPixmap Pixmap();
     ~ImageService();
-    void downloadImage();
+    void downloadImage(int width, int height);
 signals:
     void imageDownloaded(const QPixmap &pixmap);
 private slots:

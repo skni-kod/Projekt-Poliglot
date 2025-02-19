@@ -17,9 +17,9 @@ ImageService::~ImageService()
     delete manager;
 }
 
-void ImageService::downloadImage()
+void ImageService::downloadImage(int width, int height)
 {
-    manager->get(QNetworkRequest(QUrl("https://picsum.photos/1920/1080?blur=5")));
+    manager->get(QNetworkRequest(QUrl(QString("https://picsum.photos/%1/%2?blur=9").arg(width).arg(height))));
 }
 
 void ImageService::replyFinished(QNetworkReply *reply)

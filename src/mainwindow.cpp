@@ -65,7 +65,7 @@ MainWindow::MainWindow(QWidget *parent)
         backgroundImage = pixmap;
     });
 
-    imgService->downloadImage();
+    imgService->downloadImage(width, height);
 }
 
 void MainWindow::prepareGrid(int diff){
@@ -153,7 +153,8 @@ void MainWindow::prepareGrid(int diff){
         }
         ui->textBrowser->append(temp);
     }
-    ui->textBrowser->show();
+    //CZITY
+    ui->textBrowser->hide();
 
     updateCornerLabel();
 
@@ -161,35 +162,10 @@ void MainWindow::prepareGrid(int diff){
 
     if(!backgroundImage.isNull())
         ui->imgLabel->setPixmap(backgroundImage);
-    ui->imgLabel->setGeometry(0,0,1920,1080);
-    imgService->downloadImage();
+    ui->imgLabel->setGeometry(0,0,width,height);
+    imgService->downloadImage(width,height);
 
 }
-
-// void MainWindow::downloadImage()
-// {
-//     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-//     connect(manager, &QNetworkAccessManager::finished, this, &MainWindow::replyFinished);
-
-//     manager->get(QNetworkRequest(QUrl("https://picsum.photos/1920/1080?blur=5")));
-// }
-
-// void MainWindow::replyFinished(QNetworkReply *reply)
-// {
-//     if (reply->error() == QNetworkReply::NoError) {
-//         QByteArray imageData = reply->readAll();
-//         QImage img;
-//         img.loadFromData(imageData);
-
-//         if (!img.isNull()) {
-//             QPixmap pixmap = QPixmap::fromImage(img);
-//             ui->imgLabel->setPixmap(pixmap);  // Upewnij się, że imgLabel jest odpowiednio zainicjalizowany
-//         }
-//     } else {
-//         qDebug() << "Error downloading image:" << reply->errorString();
-//     }
-//     reply->deleteLater();
-// }
 
 void MainWindow::prepareLetterButtons(){
 
@@ -437,15 +413,27 @@ void MainWindow::setupButtons()
     ui->checkButton->setIconSize(checkIconMap.rect().size());
     ui->checkButton->setStyleSheet(buttonPreset1);
 
-    QIcon backspaceIcon(backspaceIconMap);
-    ui->clearButton->setIcon(backspaceIcon);
-    ui->clearButton->setIconSize(backspaceIconMap.rect().size());
-    ui->clearButton->setStyleSheet(buttonPreset1);
-
     QIcon backIcon(backIconMap);
     ui->back_Button->setIcon(backIcon);
     ui->back_Button->setIconSize(backIconMap.rect().size());
     ui->back_Button->setStyleSheet(buttonPreset1);
+
+    QIcon backspaceIcon(backspaceIconMap);
+    ui->clearButton->setIcon(backspaceIcon);
+    ui->clearButton->setIconSize(backspaceIconMap.rect().size());
+    ui->clearButton->setStyleSheet("QPushButton {"
+                                   "border: 2px ;"
+                                   "border-radius: 15px;"
+                                   "background-color: #263023;"
+                                   "min-width: 60px;"
+                                   "min-height: 60px;"
+                                   "padding: 5px;"
+                                   "font: 20px;"
+                                   "}"
+                                   ""
+                                   "QPushButton:pressed {"
+                                   "background-color: #495c43;"
+                                   "}");
 
     ui->difficultyBackButton->setIcon(backIcon);
     ui->difficultyBackButton->setIconSize(backIconMap.rect().size());
@@ -481,12 +469,14 @@ void MainWindow::setupButtons()
         ui->game->hide();
         ui->menu->show();
         ui->menu->resize(width, height);
+        setStyleSheet("background-color: #2e382b");
         ui->verticalLayoutWidget->resize(width, height);
         ui->continueButton->setDisabled(false);
     });
     connect(ui->continueButton, &QPushButton::clicked, this, [this](){
         ui->menu->hide();
         ui->game->show();
+        setStyleSheet("background-color: rgba(0, 0, 0, 0)");
         ui->menu->resize(width, height);
         ui->verticalLayoutWidget->resize(width, height);
     });
@@ -604,9 +594,11 @@ void MainWindow::setupButtons()
 
     ui->pointsLabel->setStyleSheet(                            "border: 2px ;"
                                    "border-radius: 15px;"
-                                   "background-color: #263023;");
+                                   "background-color: rgba(46, 56, 43, 0.8);"
+                                   "padding: 5px;");
     ui->label->setStyleSheet("border-radius: 10px;"
-                             "background-color: rgba(46, 56, 43, 0.8);");
+                             "background-color: rgba(46, 56, 43, 0.8);"
+                             "padding: 8px;");
 
 }
 

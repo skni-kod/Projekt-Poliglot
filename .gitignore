@@ -73,3 +73,4 @@ CMakeLists.txt.user*
 *.exe
 
 user_data/user_stats.txt
+/build
